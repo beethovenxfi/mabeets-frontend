@@ -79,7 +79,7 @@ function AprTooltip({ items, textProps, onlySparkles, placement, aprLabel, spark
                         return (
                             <Box key={index}>
                                 <Flex>
-                                    {formatApr(item.apr)} <AprText>{item.title}</AprText>
+                                    {formatApr(String(item.apr))} <AprText>{item.title}</AprText>
                                 </Flex>
                                 {/* {item.subItems?.map((subItem, subItemIndex) => {
                                     const isSubItemsLengthOne = item.subItems?.length === 1;
