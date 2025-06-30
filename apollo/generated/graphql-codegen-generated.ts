@@ -23,6 +23,11 @@ export interface Scalars {
     JSON: any;
 }
 
+export interface CreateLbpInput {
+    metadata: LbpMetadataInput;
+    poolContract: LbPoolInput;
+}
+
 /** The review data for the ERC4626 token */
 export interface Erc4626ReviewData {
     __typename: 'Erc4626ReviewData';
@@ -179,6 +184,7 @@ export interface GqlHookReviewData {
 }
 
 export type GqlHookType =
+    | 'AKRON'
     | 'DIRECTIONAL_FEE'
     | 'EXIT_FEE'
     | 'FEE_TAKING'
@@ -693,9 +699,13 @@ export interface GqlPoolDynamicData {
     apr: GqlPoolApr;
     aprItems: Array<GqlPoolAprItem>;
     fees24h: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     fees24hAth: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     fees24hAthTimestamp: Scalars['Int'];
+    /** @deprecated No longer supported */
     fees24hAtl: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     fees24hAtlTimestamp: Scalars['Int'];
     fees48h: Scalars['BigDecimal'];
     holdersCount: Scalars['BigInt'];
@@ -709,9 +719,13 @@ export interface GqlPoolDynamicData {
     protocolFees48h: Scalars['BigDecimal'];
     protocolYieldCapture24h: Scalars['BigDecimal'];
     protocolYieldCapture48h: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     sharePriceAth: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     sharePriceAthTimestamp: Scalars['Int'];
+    /** @deprecated No longer supported */
     sharePriceAtl: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     sharePriceAtlTimestamp: Scalars['Int'];
     /** CowAmm specific, equivalent of swap fees */
     surplus24h: Scalars['BigDecimal'];
@@ -723,17 +737,25 @@ export interface GqlPoolDynamicData {
     swapsCount: Scalars['BigInt'];
     totalLiquidity: Scalars['BigDecimal'];
     totalLiquidity24hAgo: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     totalLiquidityAth: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     totalLiquidityAthTimestamp: Scalars['Int'];
+    /** @deprecated No longer supported */
     totalLiquidityAtl: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     totalLiquidityAtlTimestamp: Scalars['Int'];
     totalShares: Scalars['BigDecimal'];
     totalShares24hAgo: Scalars['BigDecimal'];
     totalSupply: Scalars['BigDecimal'];
     volume24h: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     volume24hAth: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     volume24hAthTimestamp: Scalars['Int'];
+    /** @deprecated No longer supported */
     volume24hAtl: Scalars['BigDecimal'];
+    /** @deprecated No longer supported */
     volume24hAtlTimestamp: Scalars['Int'];
     volume48h: Scalars['BigDecimal'];
     yieldCapture24h: Scalars['BigDecimal'];
@@ -1078,7 +1100,6 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     /** @deprecated Use poolTokens instead */
     displayTokens: Array<GqlPoolTokenDisplay>;
     dynamicData: GqlPoolDynamicData;
-    endTime: Scalars['Int'];
     factory?: Maybe<Scalars['Bytes']>;
     hasAnyAllowedBuffer: Scalars['Boolean'];
     hasErc4626: Scalars['Boolean'];
@@ -1087,12 +1108,69 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     id: Scalars['ID'];
     /** @deprecated Removed without replacement */
     investConfig: GqlPoolInvestConfig;
-    isProjectTokenSwapInBlocked: Scalars['Boolean'];
-    lbpOwner: Scalars['String'];
     liquidityManagement?: Maybe<LiquidityManagement>;
     name: Scalars['String'];
     /** @deprecated Removed without replacement */
     nestingType: GqlPoolNestingType;
+    /**
+     * The wallet address of the owner of the pool. Pool owners can set certain properties like swapFees or AMP.
+     * @deprecated Use swapFeeManager instead
+     */
+    owner?: Maybe<Scalars['Bytes']>;
+    /** Account empowered to pause/unpause the pool (or 0 to delegate to governance) */
+    pauseManager?: Maybe<Scalars['Bytes']>;
+    /** Account empowered to set the pool creator fee percentage */
+    poolCreator?: Maybe<Scalars['Bytes']>;
+    poolTokens: Array<GqlPoolTokenDetail>;
+    protocolVersion: Scalars['Int'];
+    staking?: Maybe<GqlPoolStaking>;
+    /** Account empowered to set static swap fees for a pool (when 0 on V2 swap fees are immutable, on V3 delegate to governance) */
+    swapFeeManager?: Maybe<Scalars['Bytes']>;
+    symbol: Scalars['String'];
+    tags?: Maybe<Array<Maybe<Scalars['String']>>>;
+    /**
+     * All tokens of the pool. If it is a nested pool, the nested pool is expanded with its own tokens again.
+     * @deprecated Use poolTokens instead
+     */
+    tokens: Array<GqlPoolTokenUnion>;
+    type: GqlPoolType;
+    userBalance?: Maybe<GqlPoolUserBalance>;
+    /** @deprecated use protocolVersion instead */
+    vaultVersion: Scalars['Int'];
+    version: Scalars['Int'];
+    /** @deprecated Removed without replacement */
+    withdrawConfig: GqlPoolWithdrawConfig;
+}
+
+export interface GqlPoolLiquidityBootstrappingV3 extends GqlPoolBase {
+    __typename: 'GqlPoolLiquidityBootstrappingV3';
+    address: Scalars['Bytes'];
+    /** @deprecated Use poolTokens instead */
+    allTokens: Array<GqlPoolTokenExpanded>;
+    categories?: Maybe<Array<Maybe<GqlPoolFilterCategory>>>;
+    chain: GqlChain;
+    createTime: Scalars['Int'];
+    decimals: Scalars['Int'];
+    description?: Maybe<Scalars['String']>;
+    discord?: Maybe<Scalars['String']>;
+    /** @deprecated Use poolTokens instead */
+    displayTokens: Array<GqlPoolTokenDisplay>;
+    dynamicData: GqlPoolDynamicData;
+    endTime: Scalars['Int'];
+    factory?: Maybe<Scalars['Bytes']>;
+    farcaster?: Maybe<Scalars['String']>;
+    hasAnyAllowedBuffer: Scalars['Boolean'];
+    hasErc4626: Scalars['Boolean'];
+    hasNestedErc4626: Scalars['Boolean'];
+    hook?: Maybe<GqlHook>;
+    id: Scalars['ID'];
+    /** @deprecated Removed without replacement */
+    investConfig: GqlPoolInvestConfig;
+    isProjectTokenSwapInBlocked: Scalars['Boolean'];
+    lbpName?: Maybe<Scalars['String']>;
+    lbpOwner: Scalars['String'];
+    liquidityManagement?: Maybe<LiquidityManagement>;
+    name: Scalars['String'];
     /**
      * The wallet address of the owner of the pool. Pool owners can set certain properties like swapFees or AMP.
      * @deprecated Use swapFeeManager instead
@@ -1112,24 +1190,23 @@ export interface GqlPoolLiquidityBootstrapping extends GqlPoolBase {
     reserveTokenEndWeight: Scalars['Float'];
     reserveTokenIndex: Scalars['Int'];
     reserveTokenStartWeight: Scalars['Float'];
+    /** All tokens of the pool. If it is a nested pool, the nested pool is expanded with its own tokens again. */
     staking?: Maybe<GqlPoolStaking>;
     startTime: Scalars['Int'];
     /** Account empowered to set static swap fees for a pool (when 0 on V2 swap fees are immutable, on V3 delegate to governance) */
     swapFeeManager?: Maybe<Scalars['Bytes']>;
     symbol: Scalars['String'];
     tags?: Maybe<Array<Maybe<Scalars['String']>>>;
-    /**
-     * All tokens of the pool. If it is a nested pool, the nested pool is expanded with its own tokens again.
-     * @deprecated Use poolTokens instead
-     */
-    tokens: Array<GqlPoolTokenUnion>;
+    telegram?: Maybe<Scalars['String']>;
     type: GqlPoolType;
     userBalance?: Maybe<GqlPoolUserBalance>;
     /** @deprecated use protocolVersion instead */
     vaultVersion: Scalars['Int'];
     version: Scalars['Int'];
+    website?: Maybe<Scalars['String']>;
     /** @deprecated Removed without replacement */
     withdrawConfig: GqlPoolWithdrawConfig;
+    x?: Maybe<Scalars['String']>;
 }
 
 export interface GqlPoolMetaStable extends GqlPoolBase {
@@ -1766,6 +1843,10 @@ export interface GqlPoolTokenDetail {
     isExemptFromProtocolYieldFee: Scalars['Boolean'];
     /** Token logo */
     logoURI?: Maybe<Scalars['String']>;
+    /** If it is an ERC4626 token, this  defines how much can be deposited into the ERC4626 vault. */
+    maxDeposit?: Maybe<Scalars['String']>;
+    /** If it is an ERC4626 token, this  defines how much can be withdrawn from the ERC4626 vault. */
+    maxWithdraw?: Maybe<Scalars['String']>;
     /** Name of the pool token. */
     name: Scalars['String'];
     /** Additional data for the nested pool if the token is a BPT. Null otherwise. */
@@ -1851,6 +1932,7 @@ export type GqlPoolUnion =
     | GqlPoolFx
     | GqlPoolGyro
     | GqlPoolLiquidityBootstrapping
+    | GqlPoolLiquidityBootstrappingV3
     | GqlPoolMetaStable
     | GqlPoolQuantAmmWeighted
     | GqlPoolReClamm
@@ -2639,6 +2721,37 @@ export interface HookConfig {
 
 export type HookParams = ExitFeeHookParams | FeeTakingHookParams | MevTaxHookParams | StableSurgeHookParams;
 
+export interface LbpMetadataInput {
+    description: Scalars['String'];
+    discord?: InputMaybe<Scalars['String']>;
+    farcaster?: InputMaybe<Scalars['String']>;
+    lbpName: Scalars['String'];
+    telegram?: InputMaybe<Scalars['String']>;
+    tokenLogo: Scalars['String'];
+    website: Scalars['String'];
+    x?: InputMaybe<Scalars['String']>;
+}
+
+export interface LbpPriceChartData {
+    __typename: 'LBPPriceChartData';
+    buyVolume: Scalars['Float'];
+    fees: Scalars['Float'];
+    /** @deprecated No longer supported */
+    intervalTimestamp: Scalars['Int'];
+    projectTokenPrice: Scalars['Float'];
+    reservePrice: Scalars['Float'];
+    sellVolume: Scalars['Float'];
+    swapCount: Scalars['Int'];
+    timestamp: Scalars['Int'];
+    tvl: Scalars['Float'];
+    volume: Scalars['Float'];
+}
+
+export interface LbPoolInput {
+    address: Scalars['String'];
+    chain: GqlChain;
+}
+
 /** Liquidity management settings for v3 pools. */
 export interface LiquidityManagement {
     __typename: 'LiquidityManagement';
@@ -2664,6 +2777,7 @@ export interface Mutation {
     __typename: 'Mutation';
     beetsPoolLoadReliquarySnapshotsForAllFarms: Scalars['String'];
     beetsSyncFbeetsRatio: Scalars['String'];
+    createLBP: Scalars['Boolean'];
     poolLoadOnChainDataForAllPools: Array<GqlPoolMutationResult>;
     poolLoadSnapshotsForPools: Scalars['String'];
     poolReloadAllPoolAprs: Scalars['String'];
@@ -2672,7 +2786,6 @@ export interface Mutation {
     poolSyncAllCowSnapshots: Array<GqlPoolMutationResult>;
     poolSyncAllPoolsFromSubgraph: Array<Scalars['String']>;
     poolSyncFxQuoteTokens: Array<GqlPoolMutationResult>;
-    poolUpdateLifetimeValuesForAllPools: Scalars['String'];
     poolUpdateLiquidityValuesForAllPools: Scalars['String'];
     protocolCacheMetrics: Scalars['String'];
     sftmxSyncStakingData: Scalars['String'];
@@ -2696,6 +2809,10 @@ export interface Mutation {
 
 export interface MutationBeetsPoolLoadReliquarySnapshotsForAllFarmsArgs {
     chain: GqlChain;
+}
+
+export interface MutationCreateLbpArgs {
+    input: CreateLbpInput;
 }
 
 export interface MutationPoolLoadOnChainDataForAllPoolsArgs {
@@ -2814,6 +2931,7 @@ export interface Query {
     /** @deprecated No longer supported */
     blocksGetBlocksPerYear: Scalars['Float'];
     latestSyncedBlocks: GqlLatestSyncedBlocks;
+    lbpPriceChart?: Maybe<Array<LbpPriceChartData>>;
     /** Getting swap, add and remove events with paging */
     poolEvents: Array<GqlPoolEvent>;
     /**
@@ -2901,10 +3019,16 @@ export interface Query {
     tokenGetTokensDynamicData: Array<GqlTokenDynamicData>;
     userGetFbeetsBalance: GqlUserFbeetsBalance;
     userGetPoolBalances: Array<GqlUserPoolBalance>;
-    /** Will de deprecated in favor of poolGetEvents */
+    /**
+     * Will de deprecated in favor of poolGetEvents
+     * @deprecated Use poolEvents instead
+     */
     userGetPoolJoinExits: Array<GqlPoolJoinExit>;
     userGetStaking: Array<GqlPoolStaking>;
-    /** Will de deprecated in favor of poolGetEvents */
+    /**
+     * Will de deprecated in favor of poolGetEvents
+     * @deprecated Use poolEvents instead
+     */
     userGetSwaps: Array<GqlPoolSwap>;
     veBalGetTotalSupply: Scalars['AmountHumanReadable'];
     veBalGetUser: GqlVeBalUserData;
@@ -2926,6 +3050,12 @@ export interface QueryBeetsPoolGetReliquaryFarmSnapshotsArgs {
     chain?: InputMaybe<GqlChain>;
     id: Scalars['String'];
     range: GqlPoolSnapshotDataRange;
+}
+
+export interface QueryLbpPriceChartArgs {
+    chain: GqlChain;
+    dataPoints?: InputMaybe<Scalars['Int']>;
+    id: Scalars['String'];
 }
 
 export interface QueryPoolEventsArgs {
@@ -3482,36 +3612,15 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -3703,36 +3812,15 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -3908,36 +3996,15 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -4133,36 +4200,15 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -4395,36 +4441,199 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
+              };
+              allTokens: Array<{
+                  __typename: 'GqlPoolTokenExpanded';
+                  id: string;
+                  address: string;
+                  name: string;
+                  symbol: string;
+                  decimals: number;
+                  isNested: boolean;
+                  isPhantomBpt: boolean;
+              }>;
+              displayTokens: Array<{
+                  __typename: 'GqlPoolTokenDisplay';
+                  id: string;
+                  address: string;
+                  name: string;
+                  weight?: string | null;
+                  symbol: string;
+                  nestedTokens?: Array<{
+                      __typename: 'GqlPoolTokenDisplay';
+                      id: string;
+                      address: string;
+                      name: string;
+                      weight?: string | null;
+                      symbol: string;
+                  }> | null;
+              }>;
+              staking?: {
+                  __typename: 'GqlPoolStaking';
+                  id: string;
+                  type: GqlPoolStakingType;
+                  address: string;
+                  farm?: {
+                      __typename: 'GqlPoolStakingMasterChefFarm';
+                      id: string;
+                      beetsPerBlock: string;
+                      rewarders?: Array<{
+                          __typename: 'GqlPoolStakingFarmRewarder';
                           id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
+                          address: string;
+                          tokenAddress: string;
+                          rewardPerSecond: string;
+                      }> | null;
+                  } | null;
+                  gauge?: {
+                      __typename: 'GqlPoolStakingGauge';
+                      id: string;
+                      gaugeAddress: string;
+                      version: number;
+                      status: GqlPoolStakingGaugeStatus;
+                      workingSupply: string;
+                      otherGauges?: Array<{
+                          __typename: 'GqlPoolStakingOtherGauge';
+                          gaugeAddress: string;
+                          version: number;
+                          status: GqlPoolStakingGaugeStatus;
+                          id: string;
+                          rewards: Array<{
+                              __typename: 'GqlPoolStakingGaugeReward';
                               id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
+                              tokenAddress: string;
+                              rewardPerSecond: string;
+                          }>;
+                      }> | null;
+                      rewards: Array<{
+                          __typename: 'GqlPoolStakingGaugeReward';
+                          id: string;
+                          rewardPerSecond: string;
+                          tokenAddress: string;
                       }>;
-                  };
+                  } | null;
+                  reliquary?: {
+                      __typename: 'GqlPoolStakingReliquaryFarm';
+                      beetsPerSecond: string;
+                      totalBalance: string;
+                      levels?: Array<{
+                          __typename: 'GqlPoolStakingReliquaryFarmLevel';
+                          level: number;
+                          balance: string;
+                          apr: string;
+                          allocationPoints: number;
+                      }> | null;
+                  } | null;
+              } | null;
+              investConfig: {
+                  __typename: 'GqlPoolInvestConfig';
+                  singleAssetEnabled: boolean;
+                  proportionalEnabled: boolean;
+                  options: Array<{
+                      __typename: 'GqlPoolInvestOption';
+                      poolTokenIndex: number;
+                      poolTokenAddress: string;
+                      tokenOptions: Array<{
+                          __typename: 'GqlPoolToken';
+                          id: string;
+                          index: number;
+                          name: string;
+                          symbol: string;
+                          balance: string;
+                          address: string;
+                          priceRate: string;
+                          decimals: number;
+                          weight?: string | null;
+                          totalBalance: string;
+                      }>;
+                  }>;
+              };
+              withdrawConfig: {
+                  __typename: 'GqlPoolWithdrawConfig';
+                  singleAssetEnabled: boolean;
+                  proportionalEnabled: boolean;
+                  options: Array<{
+                      __typename: 'GqlPoolWithdrawOption';
+                      poolTokenIndex: number;
+                      poolTokenAddress: string;
+                      tokenOptions: Array<{
+                          __typename: 'GqlPoolToken';
+                          id: string;
+                          index: number;
+                          name: string;
+                          symbol: string;
+                          balance: string;
+                          address: string;
+                          priceRate: string;
+                          decimals: number;
+                          weight?: string | null;
+                          totalBalance: string;
+                      }>;
+                  }>;
+              };
+          }
+        | {
+              __typename: 'GqlPoolLiquidityBootstrappingV3';
+              id: string;
+              address: string;
+              name: string;
+              owner?: string | null;
+              decimals: number;
+              factory?: string | null;
+              symbol: string;
+              createTime: number;
+              version: number;
+              dynamicData: {
+                  __typename: 'GqlPoolDynamicData';
+                  poolId: string;
+                  swapEnabled: boolean;
+                  totalLiquidity: string;
+                  totalLiquidity24hAgo: string;
+                  totalShares: string;
+                  totalShares24hAgo: string;
+                  fees24h: string;
+                  swapFee: string;
+                  volume24h: string;
+                  fees48h: string;
+                  volume48h: string;
+                  lifetimeVolume: string;
+                  lifetimeSwapFees: string;
+                  holdersCount: string;
+                  swapsCount: string;
+                  sharePriceAth: string;
+                  sharePriceAthTimestamp: number;
+                  sharePriceAtl: string;
+                  sharePriceAtlTimestamp: number;
+                  totalLiquidityAth: string;
+                  totalLiquidityAthTimestamp: number;
+                  totalLiquidityAtl: string;
+                  totalLiquidityAtlTimestamp: number;
+                  volume24hAth: string;
+                  volume24hAthTimestamp: number;
+                  volume24hAtl: string;
+                  volume24hAtlTimestamp: number;
+                  fees24hAth: string;
+                  fees24hAthTimestamp: number;
+                  fees24hAtl: string;
+                  fees24hAtlTimestamp: number;
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -4614,36 +4823,15 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -4819,36 +5007,15 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -5024,36 +5191,15 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -5243,36 +5389,15 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -5505,36 +5630,15 @@ export type GetPoolQuery = {
                   fees24hAthTimestamp: number;
                   fees24hAtl: string;
                   fees24hAtlTimestamp: number;
-                  apr: {
-                      __typename: 'GqlPoolApr';
-                      hasRewardApr: boolean;
-                      swapApr: string;
-                      thirdPartyApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      nativeRewardApr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      apr:
-                          | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                          | { __typename: 'GqlPoolAprTotal'; total: string };
-                      items: Array<{
-                          __typename: 'GqlBalancePoolAprItem';
-                          id: string;
-                          title: string;
-                          apr:
-                              | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                              | { __typename: 'GqlPoolAprTotal'; total: string };
-                          subItems?: Array<{
-                              __typename: 'GqlBalancePoolAprSubItem';
-                              id: string;
-                              title: string;
-                              apr:
-                                  | { __typename: 'GqlPoolAprRange'; min: string; max: string }
-                                  | { __typename: 'GqlPoolAprTotal'; total: string };
-                          }> | null;
-                      }>;
-                  };
+                  aprItems: Array<{
+                      __typename: 'GqlPoolAprItem';
+                      apr: number;
+                      id: string;
+                      rewardTokenAddress?: string | null;
+                      rewardTokenSymbol?: string | null;
+                      title: string;
+                      type: GqlPoolAprItemType;
+                  }>;
               };
               allTokens: Array<{
                   __typename: 'GqlPoolTokenExpanded';
@@ -6926,62 +7030,13 @@ export const GetPoolDocument = gql`
                 fees24hAthTimestamp
                 fees24hAtl
                 fees24hAtlTimestamp
-                apr {
-                    hasRewardApr
-                    thirdPartyApr {
-                        ... on GqlPoolAprTotal {
-                            total
-                        }
-                        ... on GqlPoolAprRange {
-                            min
-                            max
-                        }
-                    }
-                    nativeRewardApr {
-                        ... on GqlPoolAprTotal {
-                            total
-                        }
-                        ... on GqlPoolAprRange {
-                            min
-                            max
-                        }
-                    }
-                    swapApr
-                    apr {
-                        ... on GqlPoolAprTotal {
-                            total
-                        }
-                        ... on GqlPoolAprRange {
-                            min
-                            max
-                        }
-                    }
-                    items {
-                        id
-                        title
-                        apr {
-                            ... on GqlPoolAprTotal {
-                                total
-                            }
-                            ... on GqlPoolAprRange {
-                                min
-                                max
-                            }
-                        }
-                        subItems {
-                            id
-                            title
-                            apr {
-                                ... on GqlPoolAprTotal {
-                                    total
-                                }
-                                ... on GqlPoolAprRange {
-                                    min
-                                    max
-                                }
-                            }
-                        }
-                    }
+                aprItems {
+                    apr
+                    id
+                    rewardTokenAddress
+                    rewardTokenSymbol
+                    title
+                    type
                 }
             }
             allTokens {

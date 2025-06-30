@@ -13,7 +13,7 @@ import { useReliquaryGlobalStats } from '../../lib/useReliquaryGlobalStats';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import startOfWeek from 'date-fns/startOfWeek';
 import { useGetReliquaryFarmSnapshotsQuery } from '~/apollo/generated/graphql-codegen-generated';
-import { getApr } from '~/lib/util/apr-util';
+import { getTotalApr } from '~/lib/util/apr-util';
 
 export default function ReliquaryOverallStats() {
     const { pool } = usePool();
@@ -71,8 +71,8 @@ export default function ReliquaryOverallStats() {
                         APR
                     </Text>
                     <HStack>
-                        <div className="apr-stripes">{getApr(data.apr.apr)}</div>
-                        <AprTooltip onlySparkles data={data.apr} />
+                        <div className="apr-stripes">{getTotalApr(data.aprItems)}</div>
+                        <AprTooltip onlySparkles items={data.aprItems} />
                     </HStack>
                 </VStack>
                 <Divider />

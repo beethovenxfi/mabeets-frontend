@@ -1,4 +1,4 @@
-import { GqlPoolApr } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolAprItem } from '~/apollo/generated/graphql-codegen-generated';
 import {
     Box,
     Button,
@@ -15,11 +15,11 @@ import {
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import { AprText } from '~/components/apr-tooltip/AprText';
 import { Info } from 'react-feather';
-import { getApr } from '~/lib/util/apr-util';
+import { formatApr, getTotalApr } from '~/lib/util/apr-util';
 import { networkConfig } from '~/lib/config/network-config';
 
 interface Props {
-    data: GqlPoolApr;
+    items: GqlPoolAprItem[];
     textProps?: TextProps;
     onlySparkles?: boolean;
     placement?: PlacementWithLogical;
@@ -29,12 +29,12 @@ interface Props {
     apr?: string;
 }
 
-function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparklesSize, poolId, apr }: Props) {
+function AprTooltip({ items, textProps, onlySparkles, placement, aprLabel, sparklesSize, poolId, apr }: Props) {
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
     const showZeroApr = poolId && Object.keys(networkConfig.warnings.poolList).includes(poolId);
-    const aprToShow = apr || getApr(data.apr);
-    const hasMaBEETSVotingApr = data.items.find((item) => item.title === 'Voting APR*');
+    const aprToShow = apr || getTotalApr(items);
+    const hasMaBEETSVotingApr = items.find((item) => item.title === 'Voting APR Boost');
 
     return !showZeroApr ? (
         <Popover trigger="hover" placement={placement}>
@@ -53,7 +53,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                         _active={{ outline: 'none' }}
                         _focus={{ outline: 'none' }}
                     >
-                        {data.hasRewardApr ? (
+                        {items?.length > 0 ? (
                             <StarsIcon
                                 width={sparklesSize === 'sm' ? 18 : 24}
                                 height={sparklesSize === 'sm' ? 19 : 25}
@@ -75,13 +75,13 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                     </Text>
                 </PopoverHeader>
                 <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
-                    {data.items.map((item, index) => {
+                    {items.map((item, index) => {
                         return (
                             <Box key={index}>
                                 <Flex>
-                                    {getApr(item.apr)} <AprText>{item.title}</AprText>
+                                    {formatApr(item.apr)} <AprText>{item.title}</AprText>
                                 </Flex>
-                                {item.subItems?.map((subItem, subItemIndex) => {
+                                {/* {item.subItems?.map((subItem, subItemIndex) => {
                                     const isSubItemsLengthOne = item.subItems?.length === 1;
                                     const isSubItemIndexZero = subItemIndex === 0;
                                     return (
@@ -111,7 +111,7 @@ function AprTooltip({ data, textProps, onlySparkles, placement, aprLabel, sparkl
                                             </Flex>
                                         </Flex>
                                     );
-                                })}
+                                })} */}
                             </Box>
                         );
                     })}

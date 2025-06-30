@@ -13,6 +13,7 @@ import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { usePoolWithOnChainData } from './usePoolWithOnChainData';
+import { getTotalApr } from '~/lib/util/apr-util';
 
 export interface PoolContextType {
     pool: GqlPoolUnion;
@@ -131,10 +132,7 @@ export function PoolProvider({ pool: poolFromProps, children }: { pool: GqlPoolU
         pool.__typename === 'GqlPoolComposableStable' ||
         pool.__typename === 'GqlPoolMetaStable';
 
-    const totalApr =
-        pool.dynamicData.apr.apr.__typename === 'GqlPoolAprRange'
-            ? parseFloat(pool.dynamicData.apr.apr.max)
-            : parseFloat(pool.dynamicData.apr.apr.total);
+    const [totalApr] = getTotalApr(pool.dynamicData.aprItems);
 
     const canCustomInvest = pool.__typename !== 'GqlPoolGyro';
 

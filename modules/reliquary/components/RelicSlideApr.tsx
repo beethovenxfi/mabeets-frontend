@@ -24,7 +24,7 @@ import TokenAvatar from '~/components/token/TokenAvatar';
 import BeetsTooltip from '~/components/tooltip/BeetsTooltip';
 import { useGetTokens } from '~/lib/global/useToken';
 import { tokenFormatAmount } from '~/lib/services/token/token-util';
-import { getApr } from '~/lib/util/apr-util';
+import { getTotalAprLabel } from '~/lib/util/apr-util';
 import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import { usePool } from '~/modules/pool/lib/usePool';
 import { useBatchRelayerHasApprovedForAll } from '../lib/useBatchRelayerHasApprovedForAll';
@@ -58,22 +58,22 @@ export default function RelicSlideApr() {
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
 
     // show selected relic (beets) apr in tooltip
-    const dynamicDataApr = {
-        ...pool.dynamicData.apr,
-        items: pool.dynamicData.apr.items.map((item) => {
-            if (item.title === 'BEETS reward APR' && item.apr.__typename === 'GqlPoolAprRange') {
-                return {
-                    ...item,
-                    apr: {
-                        __typename: 'GqlPoolAprTotal',
-                        total: selectedRelicApr,
-                    } as GqlPoolAprTotal,
-                };
-            } else {
-                return item;
-            }
-        }),
-    };
+    // const dynamicDataApr = {
+    //     ...pool.dynamicData.apr,
+    //     items: pool.dynamicData.apr.items.map((item) => {
+    //         if (item.title === 'BEETS reward APR' && item.apr.__typename === 'GqlPoolAprRange') {
+    //             return {
+    //                 ...item,
+    //                 apr: {
+    //                     __typename: 'GqlPoolAprTotal',
+    //                     total: selectedRelicApr,
+    //                 } as GqlPoolAprTotal,
+    //             };
+    //         } else {
+    //             return item;
+    //         }
+    //     }),
+    // };
 
     return (
         <>
@@ -104,8 +104,12 @@ export default function RelicSlideApr() {
                         Relic APR
                     </Text>
                     <HStack>
-                        <div className="apr-stripes">{getApr(pool.dynamicData.apr.apr)}</div>
-                        <AprTooltip onlySparkles data={dynamicDataApr} apr={getApr(pool.dynamicData.apr.apr)} />
+                        <div className="apr-stripes">{getTotalAprLabel(pool.dynamicData.aprItems)}</div>
+                        <AprTooltip
+                            onlySparkles
+                            items={pool.dynamicData.aprItems}
+                            apr={getTotalAprLabel(pool.dynamicData.aprItems)}
+                        />
                     </HStack>
                     <HStack>
                         <HStack
