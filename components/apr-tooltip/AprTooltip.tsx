@@ -15,7 +15,7 @@ import {
 import StarsIcon from '~/components/apr-tooltip/StarsIcon';
 import { AprText } from '~/components/apr-tooltip/AprText';
 import { Info } from 'react-feather';
-import { formatApr, getTotalApr } from '~/lib/util/apr-util';
+import { formatApr, getTotalAprLabel } from '~/lib/util/apr-util';
 import { networkConfig } from '~/lib/config/network-config';
 
 interface Props {
@@ -33,7 +33,7 @@ function AprTooltip({ items, textProps, onlySparkles, placement, aprLabel, spark
     // temp fix: https://github.com/chakra-ui/chakra-ui/issues/5896#issuecomment-1104085557
     const PopoverTrigger: React.FC<{ children: React.ReactNode }> = OrigPopoverTrigger;
     const showZeroApr = poolId && Object.keys(networkConfig.warnings.poolList).includes(poolId);
-    const aprToShow = apr || getTotalApr(items);
+    const aprToShow = apr || getTotalAprLabel(items);
     const hasMaBEETSVotingApr = items.find((item) => item.title === 'Voting APR Boost');
 
     return !showZeroApr ? (
