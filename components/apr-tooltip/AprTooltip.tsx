@@ -36,6 +36,37 @@ function AprTooltip({ items, textProps, onlySparkles, placement, aprLabel, spark
     const aprToShow = apr || getTotalAprLabel(items);
     const hasMaBEETSVotingApr = items.find((item) => item.title === 'Voting APR Boost');
 
+    const typeOrder = {
+        STAKING_BOOST: 4,
+        IB_YIELD: 2,
+        SWAP_FEE_24H: 1,
+        MABEETS_EMISSIONS: 3,
+    };
+
+    type ValidTypes = keyof typeof typeOrder;
+
+    const sortedAprItems = [...items].sort((a, b) => {
+        const orderA = typeOrder[a.type as ValidTypes] ?? Number.MAX_SAFE_INTEGER;
+        const orderB = typeOrder[b.type as ValidTypes] ?? Number.MAX_SAFE_INTEGER;
+        return orderA - orderB || b.apr - a.apr;
+    });
+
+    function getDisplayTitle(item: GqlPoolAprItem): string {
+        if (item.type === 'STAKING_BOOST' && item.title === 'BEETS reward APR') {
+            return 'BEETS APR (additional for max level)';
+        }
+
+        if (item.type === 'STAKING_BOOST' && item.title === 'Voting APR Boost') {
+            return 'Voting APR*';
+        }
+
+        if (item.type === 'MABEETS_EMISSIONS') {
+            return 'BEETS APR (base)';
+        }
+
+        return item.title;
+    }
+
     return !showZeroApr ? (
         <Popover trigger="hover" placement={placement}>
             <HStack align="center">
@@ -75,11 +106,11 @@ function AprTooltip({ items, textProps, onlySparkles, placement, aprLabel, spark
                     </Text>
                 </PopoverHeader>
                 <Box p="2" fontSize="sm" bgColor="whiteAlpha.200">
-                    {items.map((item, index) => {
+                    {sortedAprItems.map((item, index) => {
                         return (
                             <Box key={index}>
                                 <Flex>
-                                    {formatApr(String(item.apr))} <AprText>{item.title}</AprText>
+                                    {formatApr(String(item.apr))} <AprText>{getDisplayTitle(item)}</AprText>
                                 </Flex>
                                 {/* {item.subItems?.map((subItem, subItemIndex) => {
                                     const isSubItemsLengthOne = item.subItems?.length === 1;
