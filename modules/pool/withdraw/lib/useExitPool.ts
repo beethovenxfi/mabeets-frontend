@@ -1,5 +1,5 @@
 import { batchRelayerContractConfig, useSubmitTransaction, vaultContractConfig } from '~/lib/util/useSubmitTransaction';
-import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolUnion } from '~/lib/services/pool/pool-types';
 import { PoolExitContractCallData } from '~/lib/services/pool/pool-types';
 import { tokenAmountsConcatenatedString } from '~/lib/services/token/token-util';
 import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';

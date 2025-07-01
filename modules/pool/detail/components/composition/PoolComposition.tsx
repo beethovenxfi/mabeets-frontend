@@ -30,14 +30,11 @@ import { useGetTokens } from '~/lib/global/useToken';
 import { usePoolUserBptBalance } from '~/modules/pool/lib/usePoolUserBptBalance';
 import { usePoolUserInvestedTokenBalances } from '~/modules/pool/lib/usePoolUserInvestedTokenBalances';
 import { usePool } from '~/modules/pool/lib/usePool';
-import {
-    GqlPoolComposableStableNested,
-    GqlPoolTokenUnion,
-    GqlPoolUnion,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolComposableStableNested, GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { etherscanGetTokenUrl } from '~/lib/util/etherscan';
 import { usePoolUserDepositBalance } from '~/modules/pool/lib/usePoolUserDepositBalance';
 import { usePoolComposableUserPoolTokenBalances } from '~/modules/pool/lib/usePoolComposableUserPoolTokenBalances';
+import { GqlPoolUnion } from '~/lib/services/pool/pool-types';
 
 interface PoolCompositionTableProps {
     columns: Column<TableDataTemplate>[];

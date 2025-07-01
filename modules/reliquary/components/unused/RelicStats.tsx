@@ -74,7 +74,7 @@ export function RelicStats() {
                                 </Heading>
                                 <HStack>
                                     <div className="apr-stripes">{numeral(selectedRelicApr).format('0.00%')}</div>
-                                    <AprTooltip onlySparkles data={pool.dynamicData.apr} />
+                                    <AprTooltip onlySparkles items={pool.dynamicData.aprItems} />
                                 </HStack>
                                 <HStack
                                     px="3"

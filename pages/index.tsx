@@ -1,7 +1,7 @@
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import Head from 'next/head';
 import { UserTokenBalancesProvider } from '~/lib/user/useUserTokenBalances';
-import { GetPoolQuery, GetPoolQueryVariables, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { GetPoolQuery, GetPoolQueryVariables } from '~/apollo/generated/graphql-codegen-generated';
 import { GetPool } from '~/apollo/generated/operations';
 import { PoolProvider } from '~/modules/pool/lib/usePool';
 import { PoolUserTokenBalancesInWalletProvider } from '~/modules/pool/lib/usePoolUserTokenBalancesInWallet';
@@ -13,6 +13,7 @@ import { PoolUserDepositBalanceProvider } from '~/modules/pool/lib/usePoolUserDe
 import ReliquaryLanding from '~/modules/reliquary/ReliquaryLanding';
 import Compose, { ProviderWithProps } from '~/components/providers/Compose';
 import { Heading, VStack } from '@chakra-ui/react';
+import { GqlPoolUnion } from '~/lib/services/pool/pool-types';
 
 interface Props {
     pool: GqlPoolUnion | null;

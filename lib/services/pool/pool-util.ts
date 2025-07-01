@@ -1,8 +1,4 @@
-import {
-    GqlPoolComposableStableNested,
-    GqlPoolTokenUnion,
-    GqlPoolUnion,
-} from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolComposableStableNested, GqlPoolTokenUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { PoolService } from '~/lib/services/pool/pool-types';
 import { PoolStableService } from '~/lib/services/pool/pool-stable.service';
 import { PoolPhantomStableService } from '~/lib/services/pool/pool-phantom-stable.service';
@@ -15,6 +11,7 @@ import { PoolMetaStableService } from '~/lib/services/pool/pool-meta-stable.serv
 import { PoolComposableStableService } from '~/lib/services/pool/pool-composable-stable.service';
 import { PoolWeightedV2Service } from '~/lib/services/pool/pool-weighted-v2.service';
 import { PoolGyroService } from './pool-gyro.service';
+import { GqlPoolUnion } from '~/lib/services/pool/pool-types';
 
 export function poolGetTokensWithoutPhantomBpt(pool: GqlPoolUnion | GqlPoolComposableStableNested) {
     return pool.tokens.filter((token) => token.address !== pool.address);

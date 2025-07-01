@@ -26,7 +26,6 @@ interface Props extends BoxProps {
 }
 
 const MemoizedTokenAvatarSetInList = memo(TokenAvatarSetInList);
-const MemoizedAprTooltip = memo(AprTooltip);
 
 export function PoolListItem({
     pool,
@@ -157,11 +156,6 @@ export function PoolListItem({
                             mr="4"
                         >
                             <MobileLabel text="APR" />
-                            <MemoizedAprTooltip
-                                data={pool.dynamicData.apr}
-                                textProps={{ fontWeight: 'normal', fontSize: { base: 'xl', lg: 'md' } }}
-                                poolId={pool.id}
-                            />
                         </StatGridItem>
                         <StatGridItem area="fees" display={{ base: 'block', lg: 'none' }}>
                             <MobileLabel text="FEES (24H)" />

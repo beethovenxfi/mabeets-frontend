@@ -3,7 +3,8 @@ import { networkConfig } from '~/lib/config/network-config';
 import { BaseProvider } from '@ethersproject/providers';
 import { BigNumber } from 'ethers';
 import BalancerSorQueriesAbi from '~/lib/abi/BalancerSorQueries.json';
-import { GqlPoolComposableStableNested, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolComposableStableNested } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolUnion } from '~/lib/services/pool/pool-types';
 
 export enum SorQueriesTotalSupplyType {
     TOTAL_SUPPLY = 0,

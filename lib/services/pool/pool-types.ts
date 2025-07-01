@@ -4,9 +4,16 @@ import { BatchSwapStep, SwapKind } from '@balancer-labs/balancer-js';
 import {
     GqlPoolComposableStable,
     GqlPoolComposableStableNested,
+    GqlPoolElement,
+    GqlPoolFx,
+    GqlPoolGyro,
+    GqlPoolLiquidityBootstrapping,
+    GqlPoolMetaStable,
+    GqlPoolQuantAmmWeighted,
+    GqlPoolReClamm,
+    GqlPoolStable,
     GqlPoolTokenExpanded,
     GqlPoolTokenUnion,
-    GqlPoolUnion,
     GqlPoolWeighted,
 } from '~/apollo/generated/graphql-codegen-generated';
 import { SwapV2 } from '@balancer-labs/sor';
@@ -47,6 +54,18 @@ export type PoolJoinData =
     | PoolJoinExactTokensInForBPTOut
     | PoolJoinTokenInForExactBPTOut
     | PoolJoinAllTokensInForExactBPTOut;
+
+export type GqlPoolUnion =
+    | GqlPoolComposableStable
+    | GqlPoolElement
+    | GqlPoolFx
+    | GqlPoolGyro
+    | GqlPoolLiquidityBootstrapping
+    | GqlPoolMetaStable
+    | GqlPoolQuantAmmWeighted
+    | GqlPoolReClamm
+    | GqlPoolStable
+    | GqlPoolWeighted;
 
 interface PoolJoinBase {
     maxAmountsIn: TokenAmountHumanReadable[];

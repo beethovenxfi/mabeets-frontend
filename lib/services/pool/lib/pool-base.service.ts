@@ -1,4 +1,4 @@
-import { GqlPoolBase, GqlPoolTokenBase, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolBase, GqlPoolTokenBase } from '~/apollo/generated/graphql-codegen-generated';
 import OldBigNumber from 'bignumber.js';
 import { oldBnum, oldBnumScaleAmount, oldBnumFromBnum, oldBnumZero } from '~/lib/services/pool/lib/old-big-number';
 import { poolGetRequiredToken, poolScaleAmp } from '~/lib/services/pool/lib/util';
@@ -6,6 +6,7 @@ import { TokenAmountHumanReadable } from '~/lib/services/token/token-types';
 import { parseUnits } from 'ethers/lib/utils';
 import { isSameAddress } from '@balancer-labs/sdk';
 import { AddressZero } from '@ethersproject/constants';
+import { GqlPoolUnion } from '~/lib/services/pool/pool-types';
 
 export class PoolBaseService {
     constructor(private pool: GqlPoolUnion, private readonly wethAddress: string) {}

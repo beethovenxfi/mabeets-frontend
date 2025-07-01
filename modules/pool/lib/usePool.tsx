@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useMemo } from 'react';
-import { GqlPoolUnion, useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
+import { useGetPoolQuery } from '~/apollo/generated/graphql-codegen-generated';
 import {
     poolGetServiceForPool,
     poolGetTypeName,
@@ -8,7 +8,7 @@ import {
     poolRequiresBatchRelayerOnJoin,
 } from '~/lib/services/pool/pool-util';
 import { useEffectOnce } from '~/lib/util/custom-hooks';
-import { PoolService } from '~/lib/services/pool/pool-types';
+import { PoolService, GqlPoolUnion } from '~/lib/services/pool/pool-types';
 import { TokenBase } from '~/lib/services/token/token-types';
 import { uniqBy } from 'lodash';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';

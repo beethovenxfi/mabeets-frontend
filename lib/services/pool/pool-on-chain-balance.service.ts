@@ -1,5 +1,5 @@
 import { BaseProvider } from '@ethersproject/providers';
-import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { GqlPoolUnion } from '~/lib/services/pool/pool-types';
 import { SorQueriesTotalSupplyType, sorQueryService, SorQueryService } from '~/lib/services/pool/sor-query.service';
 import { formatFixed } from '@ethersproject/bignumber';
 import { BigNumber } from 'ethers';

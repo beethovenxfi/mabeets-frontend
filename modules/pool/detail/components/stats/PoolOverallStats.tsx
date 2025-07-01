@@ -14,7 +14,7 @@ import { InfoButton } from '~/components/info-button/InfoButton';
 import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
 import { PoolBadgeSmall } from '~/components/pool-badge/PoolBadgeSmall';
 import PoolStatsGyroscope from '../thirdparty/PoolStatsGyroscope';
-import { getApr } from '~/lib/util/apr-util';
+import { getTotalApr } from '~/lib/util/apr-util';
 
 export default function PoolOverallStats() {
     const { pool, formattedTypeName } = usePool();
@@ -62,8 +62,8 @@ export default function PoolOverallStats() {
                         </Text>
                     ) : (
                         <>
-                            <div className="apr-stripes">{getApr(pool.dynamicData.apr.apr)}</div>
-                            <AprTooltip onlySparkles data={data.apr} poolId={pool.id} />
+                            <div className="apr-stripes">{getTotalApr(pool.dynamicData.aprItems)}</div>
+                            <AprTooltip onlySparkles items={pool.dynamicData.aprItems} poolId={pool.id} />
                         </>
                     )}
                 </HStack>

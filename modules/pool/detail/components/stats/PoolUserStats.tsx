@@ -47,7 +47,7 @@ export default function PoolUserStats() {
                     ) : (
                         <>
                             <div className="apr-stripes">{numeral(myApr).format('0.00%')}</div>
-                            <AprTooltip onlySparkles data={pool.dynamicData.apr} />
+                            <AprTooltip onlySparkles items={pool.dynamicData.aprItems} />
                         </>
                     )}
                 </HStack>

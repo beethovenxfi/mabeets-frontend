@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { GetPoolQuery, GetPoolQueryVariables, GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
+import { GetPoolQuery, GetPoolQueryVariables } from '~/apollo/generated/graphql-codegen-generated';
 import { initializeApolloClient, loadApolloState } from '~/apollo/client';
 import { GetPool } from '~/apollo/generated/operations';
 import { Pool } from '~/modules/pool/detail/Pool';
@@ -16,6 +16,7 @@ import { RelicDepositBalanceProvider } from '~/modules/reliquary/lib/useRelicDep
 import { networkConfig } from '~/lib/config/network-config';
 import { ReliquaryPool } from '~/modules/reliquary/detail/ReliquaryPool';
 import Compose, { ProviderWithProps } from '~/components/providers/Compose';
+import { GqlPoolUnion } from '~/lib/services/pool/pool-types';
 
 interface Props {
     pool: GqlPoolUnion;

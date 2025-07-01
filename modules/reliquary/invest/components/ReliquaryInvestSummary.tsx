@@ -31,7 +31,7 @@ export function ReliquaryInvestSummary({ ...rest }: Props) {
                         <Heading color="beets.highlight" textAlign="center">
                             {numberFormatUSDValue(weeklyYield)}
                         </Heading>
-                        <AprTooltip data={pool.dynamicData.apr} onlySparkles={true} sparklesSize="sm" />
+                        <AprTooltip items={pool.dynamicData.aprItems} onlySparkles={true} sparklesSize="sm" />
                     </HStack>
                 </Box>
             </HStack>

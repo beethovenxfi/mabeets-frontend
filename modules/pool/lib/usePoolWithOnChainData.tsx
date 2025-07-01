@@ -1,8 +1,8 @@
 import { useQuery } from 'react-query';
 import { useProvider } from 'wagmi';
-import { GqlPoolUnion } from '~/apollo/generated/graphql-codegen-generated';
 import { useGetTokens } from '~/lib/global/useToken';
 import { poolOnChainBalanceService } from '~/lib/services/pool/pool-on-chain-balance.service';
+import { GqlPoolUnion } from '~/lib/services/pool/pool-types';
 
 export function usePoolWithOnChainData(pool: GqlPoolUnion) {
     const provider = useProvider();
