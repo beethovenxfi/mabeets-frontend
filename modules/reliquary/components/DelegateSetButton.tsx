@@ -42,7 +42,7 @@ export default function DelegateSetButton({ ...rest }: Props) {
             {...setDelegateQuery}
             {...rest}
         >
-            Delegate to MDs
+            Delegate to vote optimizer
         </BeetsSubmitTransactionButton>
     );
 }

@@ -42,7 +42,7 @@ export default function DelegateClearButton({ ...rest }: Props) {
             {...clearDelegateQuery}
             {...rest}
         >
-            Undelegate to MDs
+            Undelegate from vote optimizer
         </BeetsSubmitTransactionButton>
     );
 }

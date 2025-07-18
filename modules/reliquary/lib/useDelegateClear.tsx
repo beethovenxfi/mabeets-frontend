@@ -16,7 +16,7 @@ export function useDelegateClear() {
     function clearDelegate() {
         submit({
             args: [networkConfig.snapshot.id],
-            toastText: 'Undelegate to MDs',
+            toastText: 'Undelegate from vote optimizer',
         });
     }
 

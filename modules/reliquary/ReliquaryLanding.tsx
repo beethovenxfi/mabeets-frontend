@@ -209,7 +209,8 @@ export default function ReliquaryLanding() {
                                     templateColumns={{ base: '1fr 1fr', lg: 'auto auto auto 1fr' }}
                                     templateAreas={{
                                         base: `"title create"
-                                               "vp delegate"`,
+                                               "vp vp"
+                                               "delegate delegate"`,
                                         lg: `"title vp delegate create"`,
                                     }}
                                     w="full"
@@ -225,7 +226,7 @@ export default function ReliquaryLanding() {
                                             My relics
                                         </Heading>
                                     </GridItem>
-                                    <GridItem area="vp" mt={{ base: '2', lg: '0' }}>
+                                    <GridItem area="vp" mt={{ base: '2', lg: '0' }} w="full">
                                         <BeetsTooltip
                                             noImage
                                             label="This is your current maBEETS Voting Power. Depending on when you level up or invest/withdraw, it might be different to what is shown on the latest vote on Snapshot."
@@ -233,7 +234,7 @@ export default function ReliquaryLanding() {
                                             {!isLoading ? (
                                                 <Badge rounded="md" colorScheme="orange" p="2">
                                                     <Heading textTransform="initial" textAlign="center" size="sm">
-                                                        {numeral(totalMaBeetsVP).format('0.000a')} maBEETS VP
+                                                        {numeral(totalMaBeetsVP).format('0.000a')} maBEETS voting power
                                                     </Heading>
                                                 </Badge>
                                             ) : (
@@ -241,14 +242,10 @@ export default function ReliquaryLanding() {
                                             )}
                                         </BeetsTooltip>
                                     </GridItem>
-                                    <GridItem
-                                        area="delegate"
-                                        justifySelf={{ base: 'end', lg: 'start' }}
-                                        mt={{ base: '2', lg: '0' }}
-                                    >
+                                    <GridItem area="delegate" justifySelf="start" mt={{ base: '2', lg: '0' }} w="full">
                                         <BeetsTooltip
                                             noImage
-                                            label="Delegate or undelegate your maBEETS VP to the Music Directors. This only affects the delegation for the Beets space on Snapshot."
+                                            label="Delegate or undelegate your maBEETS voting power to the Music Directors. This only affects the delegation for the Beets space on Snapshot."
                                         >
                                             {isDelegatedToMDs ? <DelegateClearButton /> : <DelegateSetButton />}
                                         </BeetsTooltip>

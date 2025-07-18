@@ -16,7 +16,7 @@ export function useDelegateSet() {
     function setDelegate() {
         submit({
             args: [networkConfig.snapshot.id, networkConfig.snapshot.delegateAddress],
-            toastText: 'Delegate to MDs',
+            toastText: 'Delegate to vote optimizer',
         });
     }
 
