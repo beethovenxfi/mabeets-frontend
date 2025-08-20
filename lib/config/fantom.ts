@@ -10,7 +10,7 @@ const PoolDetailWarningObject: PoolDetailWarning = {
         'A vulnerability has been discovered that effects this pool. Existing liquidity providers should remove liquidity immediately, and no new deposits should be made.',
     type: 'warning',
     link: {
-        url: 'https://x.com/beethoven_x/status/1694015080717787244',
+        url: 'https://x.com/beets_fi/status/1694015080717787244',
         text: 'Read more',
     },
 };
@@ -41,6 +41,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     //rpcUrl: 'https://rpc.ftm.tools',
     rpcUrl: 'https://rpcapi.fantom.network',
     //rpcUrl: 'https://rpc.ankr.com/fantom',
+    //rpcUrl: 'https://fantom-mainnet.g.alchemy.com/v2/s-kawHBSULrBK2vkZt-6Q9-BZ0Iwn7c1',
     multicall: '0x66335d7ad8011f6aa3f48aadcb523b62b38ed961',
     beets: {
         address: '0xf24bcf4d1e507740041c9cfd2dddb29585adce1e',
@@ -128,7 +129,7 @@ export const fantomNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Twitter',
-            url: 'https://twitter.com/beethoven_x',
+            url: 'https://x.com/beets_fi',
         },
         {
             title: 'Medium',
@@ -424,7 +425,7 @@ export const fantomNetworkConfig: NetworkConfig = {
     maBeetsEnabled: true,
     claimAllRewardsEnabled: true,
     layerZeroChainId: -1,
-    beetsMigrationEnabled: false,
+    beetsMigrationEnabled: true,
     gaugeEnabled: false,
     sftmxEnabled: true,
 };

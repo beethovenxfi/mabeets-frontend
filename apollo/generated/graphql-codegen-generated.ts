@@ -61,17 +61,12 @@ export interface FeeTakingHookParams {
 
 export interface GqlAggregatorPoolFilter {
     chainIn?: InputMaybe<Array<GqlChain>>;
-    chainNotIn?: InputMaybe<Array<GqlChain>>;
-    createTime?: InputMaybe<GqlPoolTimePeriod>;
     idIn?: InputMaybe<Array<Scalars['String']>>;
-    idNotIn?: InputMaybe<Array<Scalars['String']>>;
     includeHooks?: InputMaybe<Array<GqlHookType>>;
     minTvl?: InputMaybe<Scalars['Float']>;
     poolTypeIn?: InputMaybe<Array<GqlPoolType>>;
-    poolTypeNotIn?: InputMaybe<Array<GqlPoolType>>;
     protocolVersionIn?: InputMaybe<Array<Scalars['Int']>>;
     tokensIn?: InputMaybe<Array<Scalars['String']>>;
-    tokensNotIn?: InputMaybe<Array<Scalars['String']>>;
 }
 
 export interface GqlBalancePoolAprItem {
@@ -96,6 +91,7 @@ export type GqlChain =
     | 'FANTOM'
     | 'FRAXTAL'
     | 'GNOSIS'
+    | 'HYPEREVM'
     | 'MAINNET'
     | 'MODE'
     | 'OPTIMISM'
@@ -196,6 +192,13 @@ export type GqlHookType =
     | 'STABLE_SURGE'
     | 'UNKNOWN'
     | 'VEBAL_DISCOUNT';
+
+export interface GqlLbpTopTrade {
+    __typename: 'GqlLBPTopTrade';
+    address: Scalars['String'];
+    timestamp: Scalars['String'];
+    value: Scalars['String'];
+}
 
 export interface GqlLatestSyncedBlocks {
     __typename: 'GqlLatestSyncedBlocks';
@@ -855,14 +858,9 @@ export type GqlPoolEventsDataRange = 'NINETY_DAYS' | 'SEVEN_DAYS' | 'THIRTY_DAYS
 
 export interface GqlPoolEventsFilter {
     chainIn?: InputMaybe<Array<InputMaybe<GqlChain>>>;
-    poolIdIn?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
-    range?: InputMaybe<GqlPoolEventsDataRange>;
-    typeIn?: InputMaybe<Array<InputMaybe<GqlPoolEventType>>>;
+    poolId?: InputMaybe<Scalars['String']>;
+    type?: InputMaybe<GqlPoolEventType>;
     userAddress?: InputMaybe<Scalars['String']>;
-    /** USD value of the event */
-    valueUSD_gt?: InputMaybe<Scalars['Float']>;
-    /** USD value of the event */
-    valueUSD_gte?: InputMaybe<Scalars['Float']>;
 }
 
 export interface GqlPoolFeaturedPool {
@@ -1198,6 +1196,7 @@ export interface GqlPoolLiquidityBootstrappingV3 extends GqlPoolBase {
     symbol: Scalars['String'];
     tags?: Maybe<Array<Maybe<Scalars['String']>>>;
     telegram?: Maybe<Scalars['String']>;
+    topTrades?: Maybe<Array<GqlLbpTopTrade>>;
     type: GqlPoolType;
     userBalance?: Maybe<GqlPoolUserBalance>;
     /** @deprecated use protocolVersion instead */
@@ -1298,6 +1297,8 @@ export interface GqlPoolMinimal {
     id: Scalars['ID'];
     /** Pool is receiving rewards when liquidity tokens are staked */
     incentivized: Scalars['Boolean'];
+    /** LBP specific params for v3 pools only. */
+    lbpParams?: Maybe<LiquidityBootstrappingPoolV3Params>;
     /** Liquidity management settings for v3 pools. */
     liquidityManagement?: Maybe<LiquidityManagement>;
     /** The name of the pool as per contract */
@@ -2344,7 +2345,10 @@ export interface GqlSorSwapRoute {
 /** A hop of a route. A route can have many hops meaning it traverses more than one pool. */
 export interface GqlSorSwapRouteHop {
     __typename: 'GqlSorSwapRouteHop';
-    /** The pool entity of this hop. */
+    /**
+     * The pool entity of this hop.
+     * @deprecated No longer supported
+     */
     pool: GqlPoolMinimal;
     /** The pool id of this hop. */
     poolId: Scalars['String'];
@@ -2451,6 +2455,8 @@ export interface GqlToken {
     isErc4626: Scalars['Boolean'];
     /** The logo URI of the token */
     logoURI?: Maybe<Scalars['String']>;
+    /** If it is an ERC4626 token, this  defines how much can be deposited into the ERC4626 vault. */
+    maxDeposit?: Maybe<Scalars['String']>;
     /** The name of the token */
     name: Scalars['String'];
     /** The rate provider data for the token */
@@ -2581,7 +2587,7 @@ export interface GqlTokenPriceChartDataItem {
     timestamp: Scalars['Int'];
 }
 
-export type GqlTokenType = 'BPT' | 'ERC4626' | 'PHANTOM_BPT' | 'WHITE_LISTED';
+export type GqlTokenType = 'BLOCKED_V2' | 'BLOCKED_V3' | 'BPT' | 'ERC4626' | 'PHANTOM_BPT' | 'WHITE_LISTED';
 
 export interface GqlUserFbeetsBalance {
     __typename: 'GqlUserFbeetsBalance';
@@ -2735,11 +2741,15 @@ export interface LbpMetadataInput {
 export interface LbpPriceChartData {
     __typename: 'LBPPriceChartData';
     buyVolume: Scalars['Float'];
+    cumulativeFees: Scalars['Float'];
+    cumulativeVolume: Scalars['Float'];
     fees: Scalars['Float'];
     /** @deprecated No longer supported */
     intervalTimestamp: Scalars['Int'];
+    projectTokenBalance: Scalars['Float'];
     projectTokenPrice: Scalars['Float'];
     reservePrice: Scalars['Float'];
+    reserveTokenBalance: Scalars['Float'];
     sellVolume: Scalars['Float'];
     swapCount: Scalars['Int'];
     timestamp: Scalars['Int'];
@@ -2750,6 +2760,31 @@ export interface LbpPriceChartData {
 export interface LbPoolInput {
     address: Scalars['String'];
     chain: GqlChain;
+}
+
+/** LBP specific params for v3 pools only. */
+export interface LiquidityBootstrappingPoolV3Params {
+    __typename: 'LiquidityBootstrappingPoolV3Params';
+    description?: Maybe<Scalars['String']>;
+    discord?: Maybe<Scalars['String']>;
+    endTime: Scalars['Int'];
+    farcaster?: Maybe<Scalars['String']>;
+    isProjectTokenSwapInBlocked: Scalars['Boolean'];
+    lbpName?: Maybe<Scalars['String']>;
+    lbpOwner: Scalars['String'];
+    projectToken: Scalars['String'];
+    projectTokenEndWeight: Scalars['Float'];
+    projectTokenIndex: Scalars['Int'];
+    projectTokenStartWeight: Scalars['Float'];
+    reserveToken: Scalars['String'];
+    reserveTokenEndWeight: Scalars['Float'];
+    reserveTokenIndex: Scalars['Int'];
+    reserveTokenStartWeight: Scalars['Float'];
+    startTime: Scalars['Int'];
+    telegram?: Maybe<Scalars['String']>;
+    topTrades?: Maybe<Array<GqlLbpTopTrade>>;
+    website?: Maybe<Scalars['String']>;
+    x?: Maybe<Scalars['String']>;
 }
 
 /** Liquidity management settings for v3 pools. */
@@ -2939,20 +2974,8 @@ export interface Query {
      * @deprecated Use aggregatorPools instead
      */
     poolGetAggregatorPools: Array<GqlPoolAggregator>;
-    /**
-     * Will de deprecated in favor of poolEvents
-     * @deprecated Use poolEvents instead
-     */
-    poolGetBatchSwaps: Array<GqlPoolBatchSwap>;
-    /** Getting swap, add and remove events with range */
-    poolGetEvents: Array<GqlPoolEvent>;
     /** Returns the list of featured pools for chains */
     poolGetFeaturedPools: Array<GqlPoolFeaturedPool>;
-    /**
-     * Will de deprecated in favor of poolEvents
-     * @deprecated Use poolEvents instead
-     */
-    poolGetJoinExits: Array<GqlPoolJoinExit>;
     /** Returns one pool. If a user address is provided, the user balances for the given pool will also be returned. */
     poolGetPool: GqlPoolBase;
     /** Returns all pools for a given filter */
@@ -2961,11 +2984,6 @@ export interface Query {
     poolGetPoolsCount: Scalars['Int'];
     /** Gets all the snapshots for a given pool on a chain for a certain range */
     poolGetSnapshots: Array<GqlPoolSnapshot>;
-    /**
-     * Will de deprecated in favor of poolEvents
-     * @deprecated Use poolEvents instead
-     */
-    poolGetSwaps: Array<GqlPoolSwap>;
     protocolMetricsAggregated: GqlProtocolMetricsAggregated;
     protocolMetricsChain: GqlProtocolMetricsChain;
     /** Get the staking data and status for sFTMx */
@@ -3072,28 +3090,8 @@ export interface QueryPoolGetAggregatorPoolsArgs {
     where?: InputMaybe<GqlPoolFilter>;
 }
 
-export interface QueryPoolGetBatchSwapsArgs {
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    where?: InputMaybe<GqlPoolSwapFilter>;
-}
-
-export interface QueryPoolGetEventsArgs {
-    chain: GqlChain;
-    poolId: Scalars['String'];
-    range: GqlPoolEventsDataRange;
-    typeIn: Array<GqlPoolEventType>;
-    userAddress?: InputMaybe<Scalars['String']>;
-}
-
 export interface QueryPoolGetFeaturedPoolsArgs {
     chains: Array<GqlChain>;
-}
-
-export interface QueryPoolGetJoinExitsArgs {
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    where?: InputMaybe<GqlPoolJoinExitFilter>;
 }
 
 export interface QueryPoolGetPoolArgs {
@@ -3124,12 +3122,6 @@ export interface QueryPoolGetSnapshotsArgs {
     chain?: InputMaybe<GqlChain>;
     id: Scalars['String'];
     range: GqlPoolSnapshotDataRange;
-}
-
-export interface QueryPoolGetSwapsArgs {
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    where?: InputMaybe<GqlPoolSwapFilter>;
 }
 
 export interface QueryProtocolMetricsAggregatedArgs {
@@ -5828,49 +5820,6 @@ export type GqlPoolTokenComposableStableFragment = {
     };
 };
 
-export type GetPoolSwapsQueryVariables = Exact<{
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    where?: InputMaybe<GqlPoolSwapFilter>;
-}>;
-
-export type GetPoolSwapsQuery = {
-    __typename: 'Query';
-    swaps: Array<{
-        __typename: 'GqlPoolSwap';
-        id: string;
-        poolId: string;
-        timestamp: number;
-        tokenAmountIn: string;
-        tokenAmountOut: string;
-        tokenIn: string;
-        tokenOut: string;
-        tx: string;
-        userAddress: string;
-        valueUSD: number;
-    }>;
-};
-
-export type GetPoolJoinExitsQueryVariables = Exact<{
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    poolId: Scalars['String'];
-}>;
-
-export type GetPoolJoinExitsQuery = {
-    __typename: 'Query';
-    joinExits: Array<{
-        __typename: 'GqlPoolJoinExit';
-        id: string;
-        timestamp: number;
-        tx: string;
-        type: GqlPoolJoinExitType;
-        poolId: string;
-        valueUSD?: string | null;
-        amounts: Array<{ __typename: 'GqlPoolJoinExitAmount'; address: string; amount: string }>;
-    }>;
-};
-
 export type GetPoolBptPriceChartDataQueryVariables = Exact<{
     address: Scalars['String'];
     range: GqlTokenChartDataRange;
@@ -5879,48 +5828,6 @@ export type GetPoolBptPriceChartDataQueryVariables = Exact<{
 export type GetPoolBptPriceChartDataQuery = {
     __typename: 'Query';
     prices: Array<{ __typename: 'GqlTokenPriceChartDataItem'; id: string; price: string; timestamp: number }>;
-};
-
-export type GetPoolUserJoinExitsQueryVariables = Exact<{
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    poolId: Scalars['String'];
-}>;
-
-export type GetPoolUserJoinExitsQuery = {
-    __typename: 'Query';
-    joinExits: Array<{
-        __typename: 'GqlPoolJoinExit';
-        id: string;
-        timestamp: number;
-        tx: string;
-        type: GqlPoolJoinExitType;
-        poolId: string;
-        valueUSD?: string | null;
-        amounts: Array<{ __typename: 'GqlPoolJoinExitAmount'; address: string; amount: string }>;
-    }>;
-};
-
-export type GetUserSwapsQueryVariables = Exact<{
-    first?: InputMaybe<Scalars['Int']>;
-    skip?: InputMaybe<Scalars['Int']>;
-    poolId: Scalars['String'];
-}>;
-
-export type GetUserSwapsQuery = {
-    __typename: 'Query';
-    swaps: Array<{
-        __typename: 'GqlPoolSwap';
-        id: string;
-        poolId: string;
-        timestamp: number;
-        tokenAmountIn: string;
-        tokenAmountOut: string;
-        tokenIn: string;
-        tokenOut: string;
-        tx: string;
-        valueUSD: number;
-    }>;
 };
 
 export type GetPoolSnapshotsQueryVariables = Exact<{
@@ -7241,109 +7148,6 @@ export function useGetPoolLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ge
 export type GetPoolQueryHookResult = ReturnType<typeof useGetPoolQuery>;
 export type GetPoolLazyQueryHookResult = ReturnType<typeof useGetPoolLazyQuery>;
 export type GetPoolQueryResult = Apollo.QueryResult<GetPoolQuery, GetPoolQueryVariables>;
-export const GetPoolSwapsDocument = gql`
-    query GetPoolSwaps($first: Int, $skip: Int, $where: GqlPoolSwapFilter) {
-        swaps: poolGetSwaps(first: $first, skip: $skip, where: $where) {
-            id
-            poolId
-            timestamp
-            tokenAmountIn
-            tokenAmountOut
-            tokenIn
-            tokenOut
-            tx
-            userAddress
-            valueUSD
-        }
-    }
-`;
-
-/**
- * __useGetPoolSwapsQuery__
- *
- * To run a query within a React component, call `useGetPoolSwapsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPoolSwapsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPoolSwapsQuery({
- *   variables: {
- *      first: // value for 'first'
- *      skip: // value for 'skip'
- *      where: // value for 'where'
- *   },
- * });
- */
-export function useGetPoolSwapsQuery(
-    baseOptions?: Apollo.QueryHookOptions<GetPoolSwapsQuery, GetPoolSwapsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetPoolSwapsQuery, GetPoolSwapsQueryVariables>(GetPoolSwapsDocument, options);
-}
-export function useGetPoolSwapsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetPoolSwapsQuery, GetPoolSwapsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetPoolSwapsQuery, GetPoolSwapsQueryVariables>(GetPoolSwapsDocument, options);
-}
-export type GetPoolSwapsQueryHookResult = ReturnType<typeof useGetPoolSwapsQuery>;
-export type GetPoolSwapsLazyQueryHookResult = ReturnType<typeof useGetPoolSwapsLazyQuery>;
-export type GetPoolSwapsQueryResult = Apollo.QueryResult<GetPoolSwapsQuery, GetPoolSwapsQueryVariables>;
-export const GetPoolJoinExitsDocument = gql`
-    query GetPoolJoinExits($first: Int, $skip: Int, $poolId: String!) {
-        joinExits: poolGetJoinExits(first: $first, skip: $skip, where: { poolIdIn: [$poolId] }) {
-            id
-            timestamp
-            tx
-            type
-            poolId
-            valueUSD
-            amounts {
-                address
-                amount
-            }
-        }
-    }
-`;
-
-/**
- * __useGetPoolJoinExitsQuery__
- *
- * To run a query within a React component, call `useGetPoolJoinExitsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPoolJoinExitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPoolJoinExitsQuery({
- *   variables: {
- *      first: // value for 'first'
- *      skip: // value for 'skip'
- *      poolId: // value for 'poolId'
- *   },
- * });
- */
-export function useGetPoolJoinExitsQuery(
-    baseOptions: Apollo.QueryHookOptions<GetPoolJoinExitsQuery, GetPoolJoinExitsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetPoolJoinExitsQuery, GetPoolJoinExitsQueryVariables>(GetPoolJoinExitsDocument, options);
-}
-export function useGetPoolJoinExitsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetPoolJoinExitsQuery, GetPoolJoinExitsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetPoolJoinExitsQuery, GetPoolJoinExitsQueryVariables>(
-        GetPoolJoinExitsDocument,
-        options,
-    );
-}
-export type GetPoolJoinExitsQueryHookResult = ReturnType<typeof useGetPoolJoinExitsQuery>;
-export type GetPoolJoinExitsLazyQueryHookResult = ReturnType<typeof useGetPoolJoinExitsLazyQuery>;
-export type GetPoolJoinExitsQueryResult = Apollo.QueryResult<GetPoolJoinExitsQuery, GetPoolJoinExitsQueryVariables>;
 export const GetPoolBptPriceChartDataDocument = gql`
     query GetPoolBptPriceChartData($address: String!, $range: GqlTokenChartDataRange!) {
         prices: tokenGetPriceChartData(address: $address, range: $range) {
@@ -7395,114 +7199,6 @@ export type GetPoolBptPriceChartDataQueryResult = Apollo.QueryResult<
     GetPoolBptPriceChartDataQuery,
     GetPoolBptPriceChartDataQueryVariables
 >;
-export const GetPoolUserJoinExitsDocument = gql`
-    query GetPoolUserJoinExits($first: Int, $skip: Int, $poolId: String!) {
-        joinExits: userGetPoolJoinExits(poolId: $poolId, first: $first, skip: $skip) {
-            id
-            timestamp
-            tx
-            type
-            poolId
-            valueUSD
-            amounts {
-                address
-                amount
-            }
-        }
-    }
-`;
-
-/**
- * __useGetPoolUserJoinExitsQuery__
- *
- * To run a query within a React component, call `useGetPoolUserJoinExitsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetPoolUserJoinExitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetPoolUserJoinExitsQuery({
- *   variables: {
- *      first: // value for 'first'
- *      skip: // value for 'skip'
- *      poolId: // value for 'poolId'
- *   },
- * });
- */
-export function useGetPoolUserJoinExitsQuery(
-    baseOptions: Apollo.QueryHookOptions<GetPoolUserJoinExitsQuery, GetPoolUserJoinExitsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetPoolUserJoinExitsQuery, GetPoolUserJoinExitsQueryVariables>(
-        GetPoolUserJoinExitsDocument,
-        options,
-    );
-}
-export function useGetPoolUserJoinExitsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetPoolUserJoinExitsQuery, GetPoolUserJoinExitsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetPoolUserJoinExitsQuery, GetPoolUserJoinExitsQueryVariables>(
-        GetPoolUserJoinExitsDocument,
-        options,
-    );
-}
-export type GetPoolUserJoinExitsQueryHookResult = ReturnType<typeof useGetPoolUserJoinExitsQuery>;
-export type GetPoolUserJoinExitsLazyQueryHookResult = ReturnType<typeof useGetPoolUserJoinExitsLazyQuery>;
-export type GetPoolUserJoinExitsQueryResult = Apollo.QueryResult<
-    GetPoolUserJoinExitsQuery,
-    GetPoolUserJoinExitsQueryVariables
->;
-export const GetUserSwapsDocument = gql`
-    query GetUserSwaps($first: Int, $skip: Int, $poolId: String!) {
-        swaps: userGetSwaps(first: $first, skip: $skip, poolId: $poolId) {
-            id
-            poolId
-            timestamp
-            tokenAmountIn
-            tokenAmountOut
-            tokenIn
-            tokenOut
-            tx
-            valueUSD
-        }
-    }
-`;
-
-/**
- * __useGetUserSwapsQuery__
- *
- * To run a query within a React component, call `useGetUserSwapsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUserSwapsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUserSwapsQuery({
- *   variables: {
- *      first: // value for 'first'
- *      skip: // value for 'skip'
- *      poolId: // value for 'poolId'
- *   },
- * });
- */
-export function useGetUserSwapsQuery(
-    baseOptions: Apollo.QueryHookOptions<GetUserSwapsQuery, GetUserSwapsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useQuery<GetUserSwapsQuery, GetUserSwapsQueryVariables>(GetUserSwapsDocument, options);
-}
-export function useGetUserSwapsLazyQuery(
-    baseOptions?: Apollo.LazyQueryHookOptions<GetUserSwapsQuery, GetUserSwapsQueryVariables>,
-) {
-    const options = { ...defaultOptions, ...baseOptions };
-    return Apollo.useLazyQuery<GetUserSwapsQuery, GetUserSwapsQueryVariables>(GetUserSwapsDocument, options);
-}
-export type GetUserSwapsQueryHookResult = ReturnType<typeof useGetUserSwapsQuery>;
-export type GetUserSwapsLazyQueryHookResult = ReturnType<typeof useGetUserSwapsLazyQuery>;
-export type GetUserSwapsQueryResult = Apollo.QueryResult<GetUserSwapsQuery, GetUserSwapsQueryVariables>;
 export const GetPoolSnapshotsDocument = gql`
     query GetPoolSnapshots($poolId: String!, $range: GqlPoolSnapshotDataRange!) {
         snapshots: poolGetSnapshots(id: $poolId, range: $range) {

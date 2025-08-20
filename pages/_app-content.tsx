@@ -1,14 +1,19 @@
-import { Box, useTheme } from '@chakra-ui/react';
+import { Box, useDisclosure, useTheme } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import { Navbar } from '~/modules/nav/Navbar';
 import { SubNavBar } from '~/modules/nav/SubNavBar';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useElementScroll } from 'framer-motion';
 import { Footer } from '~/modules/nav/Footer';
 import { NavbarMobile } from '~/modules/nav/NavbarMobile';
 import { GlobalRenderer } from '~/modules/global/GlobalRenderer';
 import { UserWarning } from '~/components/user-warning/UserWarning';
 import useGlobalWarnings from '~/lib/global/useGlobalWarnings';
+import { useUserAccount } from '~/lib/user/useUserAccount';
+import { BeetsBridgeModal } from '~/components/bridge/BeetsBridgeModal';
+import { useRouter } from 'next/router';
+import { networkConfig } from '~/lib/config/network-config';
+import { useBeetsBalance } from '~/components/bridge/useBeetsBalance';
 
 export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);

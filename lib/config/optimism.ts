@@ -135,7 +135,7 @@ export const optimismNetworkConfig: NetworkConfig = {
         },
         {
             title: 'Twitter',
-            url: 'https://twitter.com/beethoven_x',
+            url: 'https://x.com/beets_fi',
         },
         {
             title: 'Medium',
@@ -453,7 +453,7 @@ export const optimismNetworkConfig: NetworkConfig = {
     maBeetsEnabled: false,
     claimAllRewardsEnabled: false,
     layerZeroChainId: 111,
-    beetsMigrationEnabled: true,
+    beetsMigrationEnabled: false,
     gaugeEnabled: true,
     sftmxEnabled: false,
 };
