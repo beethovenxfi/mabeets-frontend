@@ -22,11 +22,6 @@ const nextConfig = {
     async redirects() {
         return [
             {
-                source: '/',
-                destination: '/pools',
-                permanent: false,
-            },
-            {
                 source: '/discord',
                 destination: 'https://discord.gg/kbPnYJjvwZ',
                 permanent: false,
