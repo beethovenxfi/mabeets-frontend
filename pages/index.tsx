@@ -38,7 +38,6 @@ function MaBEETS({ pool }: Props) {
                 <meta name="title" content={TITLE} />
                 <meta property="og:title" content={TITLE} />
                 <meta property="twitter:title" content={TITLE} />
-
                 <meta name="description" content={DESCRIPTION} />
                 <meta property="og:description" content={DESCRIPTION} />
                 <meta property="twitter:description" content={DESCRIPTION} />
