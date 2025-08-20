@@ -1,25 +1,14 @@
-import { Box, useDisclosure, useTheme } from '@chakra-ui/react';
+import { Box, useTheme } from '@chakra-ui/react';
 import { AppProps } from 'next/app';
 import { Navbar } from '~/modules/nav/Navbar';
-import { SubNavBar } from '~/modules/nav/SubNavBar';
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { useElementScroll } from 'framer-motion';
-import { Footer } from '~/modules/nav/Footer';
-import { NavbarMobile } from '~/modules/nav/NavbarMobile';
 import { GlobalRenderer } from '~/modules/global/GlobalRenderer';
-import { UserWarning } from '~/components/user-warning/UserWarning';
-import useGlobalWarnings from '~/lib/global/useGlobalWarnings';
-import { useUserAccount } from '~/lib/user/useUserAccount';
-import { BeetsBridgeModal } from '~/components/bridge/BeetsBridgeModal';
-import { useRouter } from 'next/router';
-import { networkConfig } from '~/lib/config/network-config';
-import { useBeetsBalance } from '~/components/bridge/useBeetsBalance';
 
 export function AppContent({ Component, pageProps }: AppProps) {
     const ref = useRef(null);
     const { scrollY } = useElementScroll(ref);
     const theme = useTheme();
-    //useGlobalWarnings();
 
     return (
         <Box
@@ -45,8 +34,6 @@ export function AppContent({ Component, pageProps }: AppProps) {
             <GlobalRenderer />
             <Box pt="3" />
             <Navbar scrollY={scrollY} />
-            {/* <Box pt="1" />
-            <SubNavBar /> */}
             <Box display="flex" justifyContent="center" mt="2">
                 <Box
                     width={{ base: 'full', '2xl': theme.breakpoints['2xl'] }}
@@ -56,10 +43,6 @@ export function AppContent({ Component, pageProps }: AppProps) {
                     <Component {...pageProps} />
                 </Box>
             </Box>
-
-            {/* <Footer />
-            <NavbarMobile />
-            <UserWarning /> */}
         </Box>
     );
 }
