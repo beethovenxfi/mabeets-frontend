@@ -129,14 +129,26 @@ export default function RelicSlideApr() {
                     </HStack>
                 </VStack>
                 {!pendingRewardsUsdValue && data && (
-                    <VStack alignItems="flex-start" height="50%" w="full" spacing="3">
-                        <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
-                            Hidden Hand rewards
-                        </Text>
-                        <Text color="white" fontSize="1.75rem">
-                            {numberFormatUSDValue(data.totalValue)}
-                        </Text>
-                    </VStack>
+                    <Box position="relative" height="50%" width="full">
+                        <VStack alignItems="flex-start" spacing="0" height="full" width="full">
+                            <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
+                                Hidden Hand incentives
+                            </Text>
+                            <Text color="white" fontSize="1.75rem">
+                                {numberFormatUSDValue(data.totalValue)}
+                            </Text>
+                        </VStack>
+                        <Button
+                            variant="primary"
+                            w="full"
+                            position="absolute"
+                            bottom="0"
+                            left="0"
+                            onClick={() => window.open('https://hiddenhand.finance/rewards', '_blank')}
+                        >
+                            Claim incentives on Hidden Hand
+                        </Button>
+                    </Box>
                 )}
                 {pendingRewardsUsdValue && (
                     <VStack
