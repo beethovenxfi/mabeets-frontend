@@ -81,7 +81,7 @@ export default function RelicSlideApr() {
                 left={{ base: '0', lg: '-42.5%' }}
                 rounded="md"
                 position={{ base: 'relative', lg: 'absolute' }}
-                //spacing="4"
+                spacing="4"
                 width={{ base: '100%', lg: '60%' }}
                 top="0"
                 alignItems="flex-start"
@@ -99,7 +99,7 @@ export default function RelicSlideApr() {
                 // minHeight="310px"
                 // justifyContent="stretch"
             >
-                <VStack alignItems="flex-start" height="50%" w="full" spacing="3" h="50%">
+                <VStack alignItems="flex-start" height="50%" w="full" spacing="0" h="50%">
                     <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
                         Relic APR
                     </Text>

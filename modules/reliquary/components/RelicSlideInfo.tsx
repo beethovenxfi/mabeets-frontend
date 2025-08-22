@@ -110,7 +110,7 @@ export default function RelicSlideInfo() {
                     labelProps={{
                         lineHeight: '1rem',
                         fontWeight: 'semibold',
-                        fontSize: 'sm',
+                        fontSize: 'md',
                         color: 'beets.base.50',
                     }}
                     label="My potential daily yield"
