@@ -33,20 +33,22 @@ import { useRelicPendingRewards } from '../lib/useRelicPendingRewards';
 import useReliquary from '../lib/useReliquary';
 import RelicMaturityModal from './RelicMaturityModal';
 import { ReliquaryBatchRelayerApprovalButton } from './ReliquaryBatchRelayerApprovalButton';
+import { useGetHHRewards } from '~/modules/reliquary/lib/useGetHHRewards';
 
 export default function RelicSlideApr() {
     const { pool } = usePool();
     const { isActive } = useSwiperSlide();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isLoadingRelicPositions, selectedRelicLevel, relicPositions, selectedRelicApr } = useReliquary();
+    const { data, isLoading, error } = useGetHHRewards();
+    const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
+    const { harvest, ...harvestQuery } = useRelicHarvestRewards();
 
     const {
         data: pendingRewards = [],
         refetch: refetchPendingRewards,
         isLoading: isLoadingPendingRewards,
     } = useRelicPendingRewards();
-    const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
-    const { harvest, ...harvestQuery } = useRelicHarvestRewards();
 
     // hack to get around next.js hydration issues with swiper
     useEffect(() => {
@@ -93,10 +95,11 @@ export default function RelicSlideApr() {
                     transform: `scale(${isActive ? '1' : '0.75'})`,
                     transition: { delay: 0.1 },
                 }}
-                minHeight="310px"
-                justifyContent="stretch"
+                height="full"
+                // minHeight="310px"
+                // justifyContent="stretch"
             >
-                <VStack alignItems="flex-start" height="50%" w="full" spacing="3">
+                <VStack alignItems="flex-start" height="50%" w="full" spacing="3" h="50%">
                     <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
                         Relic APR
                     </Text>
@@ -125,6 +128,16 @@ export default function RelicSlideApr() {
                         </BeetsTooltip>
                     </HStack>
                 </VStack>
+                {!pendingRewardsUsdValue && data && (
+                    <VStack alignItems="flex-start" height="50%" w="full" spacing="3">
+                        <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
+                            Hidden Hand rewards
+                        </Text>
+                        <Text color="white" fontSize="1.75rem">
+                            {numberFormatUSDValue(data.totalValue)}
+                        </Text>
+                    </VStack>
+                )}
                 {pendingRewardsUsdValue && (
                     <VStack
                         alignItems="flex-start"
