@@ -43,8 +43,6 @@ export default function RelicSlideInfo() {
     const [, maxTotal] = getTotalApr(dynamicDataAprItems);
     const relicYieldPerDay = (relicBalanceUSD * maxTotal) / 365;
 
-    console.log({ maxTotal, relicBalanceUSD });
-
     const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
 
     // hack to get around next.js hydration issues with swiper
