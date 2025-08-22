@@ -40,7 +40,7 @@ export default function RelicSlideApr() {
     const { isActive } = useSwiperSlide();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isLoadingRelicPositions, selectedRelicLevel, relicPositions, selectedRelicApr } = useReliquary();
-    const { data, isLoading, error } = useGetHHRewards();
+    const { data, isLoading } = useGetHHRewards();
     const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
     const { harvest, ...harvestQuery } = useRelicHarvestRewards();
 
@@ -128,26 +128,31 @@ export default function RelicSlideApr() {
                         </BeetsTooltip>
                     </HStack>
                 </VStack>
-                {!pendingRewardsUsdValue && data && (
+                {!pendingRewardsUsdValue && (
                     <Box position="relative" height="50%" width="full">
-                        <VStack alignItems="flex-start" spacing="0" height="full" width="full">
-                            <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
-                                Hidden Hand incentives
-                            </Text>
-                            <Text color="white" fontSize="1.75rem">
-                                {numberFormatUSDValue(data.totalValue)}
-                            </Text>
-                        </VStack>
-                        <Button
-                            variant="primary"
-                            w="full"
-                            position="absolute"
-                            bottom="0"
-                            left="0"
-                            onClick={() => window.open('https://hiddenhand.finance/rewards', '_blank')}
-                        >
-                            Claim incentives on Hidden Hand
-                        </Button>
+                        {isLoading && <Skeleton h="100%" w="100%" rounded="md" />}
+                        {!isLoading && data && (
+                            <>
+                                <VStack alignItems="flex-start" spacing="0" height="full" width="full">
+                                    <Text lineHeight="1rem" fontWeight="semibold" fontSize="md" color="beets.base.50">
+                                        Hidden Hand incentives
+                                    </Text>
+                                    <Text color="white" fontSize="1.75rem">
+                                        {numberFormatUSDValue(data.totalValue)}
+                                    </Text>
+                                </VStack>
+                                <Button
+                                    variant="primary"
+                                    w="full"
+                                    position="absolute"
+                                    bottom="0"
+                                    left="0"
+                                    onClick={() => window.open('https://hiddenhand.finance/rewards', '_blank')}
+                                >
+                                    Claim incentives on Hidden Hand
+                                </Button>
+                            </>
+                        )}
                     </Box>
                 )}
                 {pendingRewardsUsdValue && (
