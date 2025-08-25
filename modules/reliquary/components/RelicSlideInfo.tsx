@@ -6,31 +6,44 @@ import { numberFormatUSDValue } from '~/lib/util/number-formats';
 import numeral from 'numeral';
 import { InfoButton } from '~/components/info-button/InfoButton';
 import TokenAvatar from '~/components/token/TokenAvatar';
-import { useRelicPendingRewards } from '../lib/useRelicPendingRewards';
-import { sumBy } from 'lodash';
-import { useGetTokens } from '~/lib/global/useToken';
-import { useRelicHarvestRewards } from '../lib/useRelicHarvestRewards';
 import { useReliquaryGlobalStats } from '../lib/useReliquaryGlobalStats';
-import { useNetworkConfig } from '~/lib/global/useNetworkConfig';
-import { networkConfig } from '~/lib/config/network-config';
 import { motion } from 'framer-motion';
+import { usePool } from '~/modules/pool/lib/usePool';
+import { getTotalApr } from '~/lib/util/apr-util';
+import { useRelicDepositBalance } from '../lib/useRelicDepositBalance';
 
 export default function RelicSlideInfo() {
+    const { pool } = usePool();
     const { isActive } = useSwiperSlide();
-    const { isLoadingRelicPositions, selectedRelicLevel, selectedRelic, weightedTotalBalance, beetsPerDay, isLoading } =
-        useReliquary();
-    const { priceForAmount } = useGetTokens();
-    const config = useNetworkConfig();
-
+    const {
+        isLoadingRelicPositions,
+        selectedRelicLevel,
+        selectedRelic,
+        weightedTotalBalance,
+        beetsPerDay,
+        isLoading,
+        selectedRelicApr,
+    } = useReliquary();
+    const { relicBalanceUSD } = useRelicDepositBalance();
     const { data: globalStats, loading: isLoadingGlobalStats } = useReliquaryGlobalStats();
     const weightedRelicAmount = parseFloat(selectedRelic?.amount || '0') * (selectedRelicLevel?.allocationPoints || 0);
     const relicShare = globalStats && selectedRelic ? weightedRelicAmount / weightedTotalBalance : 0;
-    const relicBeetsPerDay = beetsPerDay * relicShare;
-    const relicYieldPerDay = priceForAmount({ address: config.beets.address, amount: `${relicBeetsPerDay}` });
 
-    const { data: pendingRewards = [], refetch: refetchPendingRewards } = useRelicPendingRewards();
+    const dynamicDataAprItems = pool.dynamicData.aprItems.map((item) => {
+        if (item.title === 'BEETS reward APR' && item.type === 'STAKING_BOOST') {
+            return {
+                ...item,
+                apr: parseFloat(selectedRelicApr),
+            };
+        } else {
+            return item;
+        }
+    });
+
+    const [, maxTotal] = getTotalApr(dynamicDataAprItems);
+    const relicYieldPerDay = (relicBalanceUSD * maxTotal) / 365;
+
     const [_isLoadingRelicPositions, setIsLoadingRelicPositions] = useState(false);
-    const { harvest } = useRelicHarvestRewards();
 
     // hack to get around next.js hydration issues with swiper
     useEffect(() => {
@@ -97,11 +110,11 @@ export default function RelicSlideInfo() {
                     labelProps={{
                         lineHeight: '1rem',
                         fontWeight: 'semibold',
-                        fontSize: 'sm',
+                        fontSize: 'md',
                         color: 'beets.base.50',
                     }}
                     label="My potential daily yield"
-                    infoText="The potential daily value is an approximation based on swap fees, current token prices and your staked share. A number of external factors can influence this value from second to second."
+                    infoText="The potential daily value is an approximation based on swap fees, bi-weekly vote incentives to be received, current token prices and your staked share. A number of external factors can influence this value from second to second."
                 />
                 {isLoading ? (
                     <Skeleton height="34px" width="140px" mt="4px" mb="4px" />
@@ -110,7 +123,7 @@ export default function RelicSlideInfo() {
                         {numberFormatUSDValue(relicYieldPerDay)}
                     </Text>
                 )}
-                {beetsPerDay > 0 && (
+                {/* {beetsPerDay > 0 && (
                     <HStack spacing="1" mb="0.5">
                         <TokenAvatar height="20px" width="20px" address={networkConfig.beets.address} />
                         <Tooltip label={`BEETS emissions for reliquary are calculated per second.`}>
@@ -119,7 +132,7 @@ export default function RelicSlideInfo() {
                             </Text>
                         </Tooltip>
                     </HStack>
-                )}
+                )} */}
             </VStack>
         </Stack>
     );
