@@ -59,12 +59,22 @@ export default function RelicSlideApr() {
     const { priceForAmount } = useGetTokens();
     const pendingRewardsUsdValue = sumBy(pendingRewards, priceForAmount);
 
+    const baseApr = pool.dynamicData.aprItems.find(
+        (item) => item.title === 'BEETS reward APR' && item.type === 'MABEETS_EMISSIONS',
+    );
+
     // show selected relic (beets) apr in tooltip
     const dynamicDataAprItems = pool.dynamicData.aprItems.map((item) => {
         if (item.title === 'BEETS reward APR' && item.type === 'STAKING_BOOST') {
             return {
                 ...item,
-                apr: parseFloat(selectedRelicApr),
+                title: 'BEETS reward APR2',
+                apr: parseFloat(selectedRelicApr) - (baseApr?.apr || 0),
+            };
+        } else if (item.title === 'Voting APR Boost' && item.type === 'STAKING_BOOST') {
+            return {
+                ...item,
+                apr: item.apr * ((selectedRelicLevel?.allocationPoints || 0) / 100),
             };
         } else {
             return item;

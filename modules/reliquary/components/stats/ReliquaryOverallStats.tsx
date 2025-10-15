@@ -63,6 +63,21 @@ export default function ReliquaryOverallStats() {
     const tvl = reliquaryPoolRatio * parseFloat(data.totalLiquidity);
     const avgValuePerRelic = tvl / parseInt(globalStats?.relicCount || '');
 
+    const baseApr = pool.dynamicData.aprItems.find(
+        (item) => item.title === 'BEETS reward APR' && item.type === 'MABEETS_EMISSIONS',
+    );
+
+    const dynamicDataAprItems = pool.dynamicData.aprItems.map((item) => {
+        if (item.title === 'BEETS reward APR' && item.type === 'STAKING_BOOST') {
+            return {
+                ...item,
+                apr: item.apr - (baseApr?.apr || 0),
+            };
+        } else {
+            return item;
+        }
+    });
+
     return (
         <Card px="2" py="4" h="full" w="full">
             <VStack spacing="4" width="full" alignItems="flex-start" px="2">
@@ -71,8 +86,8 @@ export default function ReliquaryOverallStats() {
                         APR
                     </Text>
                     <HStack>
-                        <div className="apr-stripes">{getTotalAprLabel(data.aprItems)}</div>
-                        <AprTooltip onlySparkles items={data.aprItems} />
+                        <div className="apr-stripes">{getTotalAprLabel(dynamicDataAprItems)}</div>
+                        <AprTooltip onlySparkles items={dynamicDataAprItems} />
                     </HStack>
                 </VStack>
                 <Divider />
