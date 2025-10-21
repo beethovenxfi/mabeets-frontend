@@ -19,6 +19,7 @@ const chainToRpcMap: Record<GqlChain, string | undefined> = {
     ZKEVM: `https://polygonzkevm-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     SONIC: `https://sonic-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
     HYPEREVM: `https://hyper-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`,
+    PLASMA: undefined,
 };
 
 function getRpcUrl(chain: string) {

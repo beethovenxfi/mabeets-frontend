@@ -95,6 +95,7 @@ export type GqlChain =
     | 'MAINNET'
     | 'MODE'
     | 'OPTIMISM'
+    | 'PLASMA'
     | 'POLYGON'
     | 'SEPOLIA'
     | 'SONIC'
@@ -205,6 +206,38 @@ export interface GqlLatestSyncedBlocks {
     poolSyncBlock: Scalars['BigInt'];
     userStakeSyncBlock: Scalars['BigInt'];
     userWalletSyncBlock: Scalars['BigInt'];
+}
+
+export interface GqlLoopsData {
+    __typename: 'GqlLoopsData';
+    /** Actual TotalSupply of LoopS. */
+    actualSupply: Scalars['String'];
+    /** The total APR for LoopS */
+    apr: Scalars['Float'];
+    /** The amount of stS provided to Aave. */
+    collateralAmount: Scalars['String'];
+    /** The amount of stS provided to Aave in S. */
+    collateralAmountInEth: Scalars['String'];
+    /** The total S debt amount of the position */
+    debtAmount: Scalars['String'];
+    /** The health factor of the Aave position */
+    healthFactor: Scalars['String'];
+    /** The amount of leverage the current position has. */
+    leverage: Scalars['Float'];
+    /** Net Asset Value. The amount of collateral minus the amount of debt. */
+    nav: Scalars['String'];
+    /** The current rate of LoopS against S. */
+    rate: Scalars['String'];
+    /** The current Sonic points multiplier for LoopS */
+    sonicPointsMultiplier: Scalars['String'];
+    /** The current amount of stS supplied to the Aave market */
+    stSAaveMarketSupply: Scalars['String'];
+    /** The current cap on the stS market on Aave */
+    stSAaveMarketSupplyCap: Scalars['String'];
+    /** The health factor that the Aave position should have */
+    targetHealthFactor: Scalars['String'];
+    /** Net Asset Value in USD. */
+    tvl: Scalars['String'];
 }
 
 /** All info on the nested pool if the token is a BPT. It will only support 1 level of nesting. */
@@ -408,7 +441,7 @@ export interface GqlPoolApr {
 /** All APRs for a pool */
 export interface GqlPoolAprItem {
     __typename: 'GqlPoolAprItem';
-    /** The APR value in % -> 0.2 = 0.2% */
+    /** The APR value in % -> 0.2 = 20% */
     apr: Scalars['Float'];
     /** The id of the APR item */
     id: Scalars['ID'];
@@ -2967,6 +3000,8 @@ export interface Query {
     blocksGetBlocksPerYear: Scalars['Float'];
     latestSyncedBlocks: GqlLatestSyncedBlocks;
     lbpPriceChart?: Maybe<Array<LbpPriceChartData>>;
+    /** Get the LoopS data */
+    loopsGetData: GqlLoopsData;
     /** Getting swap, add and remove events with paging */
     poolEvents: Array<GqlPoolEvent>;
     /**
@@ -2992,7 +3027,7 @@ export interface Query {
     sftmxGetStakingSnapshots: Array<GqlSftmxStakingSnapshot>;
     /** Retrieve the withdrawalrequests from a user */
     sftmxGetWithdrawalRequests: Array<GqlSftmxWithdrawalRequests>;
-    /** Get swap quote from the SOR v2 for the V2 vault */
+    /** Get swap quote from the SOR v2 */
     sorGetSwapPaths: GqlSorGetSwapPaths;
     /** Get the staking data and status for stS */
     stsGetGqlStakedSonicData: GqlStakedSonicData;

@@ -52,6 +52,10 @@ function AprTooltip({ items, textProps, onlySparkles, placement, aprLabel, spark
     });
 
     function getDisplayTitle(item: GqlPoolAprItem): string {
+        if (item.type === 'STAKING_BOOST' && item.title === 'BEETS reward APR2') {
+            return 'BEETS APR (additional for current level)';
+        }
+
         if (item.type === 'STAKING_BOOST' && item.title === 'BEETS reward APR') {
             return 'BEETS APR (additional for max level)';
         }
