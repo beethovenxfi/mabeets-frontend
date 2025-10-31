@@ -228,14 +228,10 @@ export interface GqlLoopsData {
     nav: Scalars['String'];
     /** The current rate of LoopS against S. */
     rate: Scalars['String'];
-    /** The current Sonic points multiplier for LoopS */
-    sonicPointsMultiplier: Scalars['String'];
     /** The current amount of stS supplied to the Aave market */
     stSAaveMarketSupply: Scalars['String'];
     /** The current cap on the stS market on Aave */
     stSAaveMarketSupplyCap: Scalars['String'];
-    /** The health factor that the Aave position should have */
-    targetHealthFactor: Scalars['String'];
     /** Net Asset Value in USD. */
     tvl: Scalars['String'];
 }
@@ -6123,24 +6119,15 @@ export type GetReliquaryFarmSnapshotsQuery = {
     snapshots: Array<{
         __typename: 'GqlReliquaryFarmSnapshot';
         id: string;
-        farmId: string;
         timestamp: number;
         totalBalance: string;
         totalLiquidity: string;
         relicCount: string;
-        userCount: string;
         levelBalances: Array<{
             __typename: 'GqlReliquaryFarmLevelSnapshot';
             id: string;
             level: string;
             balance: string;
-        }>;
-        tokenBalances: Array<{
-            __typename: 'GqlReliquaryTokenBalanceSnapshot';
-            id: string;
-            address: string;
-            balance: string;
-            symbol: string;
         }>;
     }>;
 };
@@ -7407,7 +7394,6 @@ export const GetReliquaryFarmSnapshotsDocument = gql`
     query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
         snapshots: beetsPoolGetReliquaryFarmSnapshots(id: $id, range: $range) {
             id
-            farmId
             timestamp
             totalBalance
             totalLiquidity
@@ -7418,13 +7404,6 @@ export const GetReliquaryFarmSnapshotsDocument = gql`
             }
             relicCount
             totalBalance
-            userCount
-            tokenBalances {
-                id
-                address
-                balance
-                symbol
-            }
         }
     }
 `;
