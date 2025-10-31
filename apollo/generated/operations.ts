@@ -659,7 +659,6 @@ export const GetReliquaryFarmSnapshots = gql`
                 balance
             }
             relicCount
-            totalBalance
         }
     }
 `;

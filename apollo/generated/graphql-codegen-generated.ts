@@ -7403,7 +7403,6 @@ export const GetReliquaryFarmSnapshotsDocument = gql`
                 balance
             }
             relicCount
-            totalBalance
         }
     }
 `;

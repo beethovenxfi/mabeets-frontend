@@ -10,6 +10,5 @@ query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!)
             balance
         }
         relicCount
-        totalBalance
     }
 }
