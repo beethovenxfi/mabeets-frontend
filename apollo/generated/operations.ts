@@ -650,7 +650,6 @@ export const GetReliquaryFarmSnapshots = gql`
     query GetReliquaryFarmSnapshots($id: String!, $range: GqlPoolSnapshotDataRange!) {
         snapshots: beetsPoolGetReliquaryFarmSnapshots(id: $id, range: $range) {
             id
-            farmId
             timestamp
             totalBalance
             totalLiquidity
@@ -660,14 +659,6 @@ export const GetReliquaryFarmSnapshots = gql`
                 balance
             }
             relicCount
-            totalBalance
-            userCount
-            tokenBalances {
-                id
-                address
-                balance
-                symbol
-            }
         }
     }
 `;
