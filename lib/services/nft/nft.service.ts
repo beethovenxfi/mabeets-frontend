@@ -33,11 +33,7 @@ export default class NftService {
 
     get provider(): BaseProvider {
         if (this._provider === null) {
-            if (networkConfig.chainId === '250') {
-                this._provider = networkProvider;
-            } else {
-                this._provider = new StaticJsonRpcBatchProvider('https://rpc.ftm.tools');
-            }
+            this._provider = networkProvider;
         }
 
         return this._provider;
