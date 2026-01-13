@@ -24,7 +24,7 @@ export const sonicNetworkConfig: NetworkConfig = {
         nativeAssetId: 'sonic',
         platformId: 'sonic',
     },
-    rpcUrl: 'https://sonic.drpc.org',
+    rpcUrl: 'https://sonic-json-rpc.stakely.io',
     multicall: '0xc07500b9fe7bea9efd5b54341d0aa3658a33d39a',
     beets: {
         address: '0x2d0e0814e62d80056181f5cd932274405966e4f0',
