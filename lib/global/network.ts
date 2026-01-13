@@ -28,9 +28,6 @@ const response = configureChains(
             id: parseInt(networkConfig.chainId),
             network: networkConfig.networkShortName,
             name: networkConfig.networkName,
-            ...(networkConfig.chainId === '250' && {
-                iconUrl: 'https://assets.coingecko.com/coins/images/4001/large/Fantom.png?1558015016',
-            }),
             ...(networkConfig.chainId === '146' && {
                 iconUrl: 'https://beethoven-assets.s3.eu-central-1.amazonaws.com/sonic.png',
             }),
@@ -62,7 +59,7 @@ const response = configureChains(
     ],
     [
         batchJsonRpcProvider({
-            rpc: () => ({ http: process.env.NEXT_PUBLIC_RPC_URL || networkConfig.rpcUrl }),
+            rpc: () => ({ http: getRpc(networkConfig.chainName as GqlChain) }),
         }),
     ],
 );
