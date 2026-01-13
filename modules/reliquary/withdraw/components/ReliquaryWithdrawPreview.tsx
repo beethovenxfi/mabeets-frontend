@@ -47,8 +47,6 @@ export function ReliquaryWithdrawPreview({ onWithdrawComplete, onClose }: Props)
     const { reliquaryZap, ...reliquaryZapQuery } = useReliquaryZap('WITHDRAW');
     const { data: hasBatchRelayerApproval, isLoading: isLoadingHasBatchRelayerApproval } = useHasBatchRelayerApproval();
 
-    console.log({ hasBatchRelayerApproval });
-
     const withdrawAmounts =
         selectedWithdrawType === 'SINGLE_ASSET' && singleAssetWithdraw
             ? [singleAssetWithdraw]
